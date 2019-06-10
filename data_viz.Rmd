@@ -1,0 +1,128 @@
+---
+title: "Data Viz"
+author: "Jake Riley"
+date: "June 8, 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+library(tidyverse)
+```
+
+## today's talk
+
+* Intro
+* What is ggplot
+* Tips & Tricks
+* Best Practices
+* Try it out
+
+## an intro
+
+* Jake Riley
+* Clinical Data Analyst at Children's Hospital of Philadelphia
+* Avid `ggplot2` answerer on stackoverflow
+* dogdad
+
+@yake_84
+
+
+## what is ggplot?
+ * grammar of graphics
+ * just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
+ * the hope is that we will invent new types of charts
+ 
+```{r}
+p <- 
+  ggplot(mpg) + 
+  geom_count(
+    aes(cty, hwy, color = class), 
+    alpha = 0.8
+  ) +
+  theme_bw()
+
+```
+ 
+ 
+## an example
+```{r grammar, out.width=c('50%', '50%'), fig.show='hold'}
+p
+
+p + coord_polar()
+```
+
+## demystifying aes()
+
+* `aes()` = aesthetics
+* dynamic, data driven **variables** go inside the `aes()`
+* constant, static **values** go outside
+
+## note the difference
+.pull-left[
+* `geom_point(aes(color = class, size = n), ...)`
+* `geom_point(aes(...), color = "blue", size = 2)`
+]
+
+.pull-right[
+```{r out.height=c('50%', '50%'), fig.show='hold', echo=FALSE}
+df <-
+  mpg %>% 
+  count(cyl = factor(cyl), cty, hwy)
+
+ggplot(df, aes(x = cty, y = hwy)) +
+  geom_point(aes(color = cyl, size = n))
+
+ggplot(df, aes(x = cty, y = hwy)) +
+  geom_point(color = "blue", size = 2)
+
+```
+]
+
+## tips & tricks
+
+.pull-left[
+- One bullet.
+
+- Another bullet.
+]
+
+.pull-right[
+![an image](foo.png)
+]
+
+## `geom_col` vs `geom_bar`
+
+## `scale_`[color/fill]`_identity()`
+
+## descending bar charts
+
+## `facet_grid()` vs `facet_wrap()`
+
+## apect.ratio (coord_fixed or theme), golden ratio 1.6
+
+## zooming in on data ex. boxplot (coord_cartesian)
+
+
+## Best practices
+
+## Multiple series overtime -> heatmap
+
+## Not everything needs a color
+
+## Highlight the data the user needs to act on
+
+## Give an example of a bad/mediocre chart, ask to partner up and how to 
+## improve -> post to google slides?
+
+Resources
+R4DS
+ggplot extensions
+spider/radar plot
+gganimate
+ggrepel
+stackoverflow
