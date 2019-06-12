@@ -63,13 +63,10 @@ p + coord_polar()
 * constant, static **values** go outside
 
 ## note the difference
-.pull-left[
 * `geom_point(aes(color = class, size = n), ...)`
 * `geom_point(aes(...), color = "blue", size = 2)`
-]
 
-.pull-right[
-```{r out.height=c('50%', '50%'), fig.show='hold', echo=FALSE}
+```{r out.width=c('50%', '50%'), fig.show='hold', echo=FALSE}
 df <-
   mpg %>% 
   count(cyl = factor(cyl), cty, hwy)
@@ -81,7 +78,7 @@ ggplot(df, aes(x = cty, y = hwy)) +
   geom_point(color = "blue", size = 2)
 
 ```
-]
+
 
 ## tips & tricks
 
