@@ -17,7 +17,7 @@ library(tidyverse)
 ```
 
 ## today's talk
-https://bit.ly/2Wt7nkQ
+* https://bit.ly/2Wt7nkQ
 * Intro
 * What is ggplot
 * Tips & Tricks
