@@ -9,8 +9,10 @@ output: ioslides_presentation
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  out.height = "300px"
 )
+
 library(tidyverse)
 ```
 
@@ -82,23 +84,108 @@ ggplot(df, aes(x = cty, y = hwy)) +
 
 ## tips & tricks
 
-.pull-left[
-- One bullet.
-
-- Another bullet.
-]
-
-.pull-right[
-![an image](foo.png)
-]
-
-## `geom_col` vs `geom_bar`
-
-## `scale_`[color/fill]`_identity()`
-
 ## descending bar charts
 
+The number one things I get asked is how to make a barchart go in descending order. 
+
+```{r}
+ggplot(mpg, aes(class)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## arrange by volume: `fct_infreq()`
+```{r}
+mpg %>% 
+  mutate(class = fct_infreq(class)) %>% 
+  ggplot(aes(class)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## arrange in descending order: `fct_rev()`
+```{r, }
+mpg %>% 
+  mutate(class = fct_infreq(class)) %>% 
+  ggplot(aes(fct_rev(class))) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## aggregated data: `fct_reorder()`
+```{r}
+mpg %>% 
+  count(class) %>% 
+  mutate(class = fct_reorder(class, n, sum))
+```
+
+## aggregated data: `fct_reorder()`
+```{r}
+mpg %>% 
+  count(class) %>% 
+  mutate(class = fct_reorder(class, n, sum)) %>% 
+  ggplot(aes(class, n)) +
+  geom_col() + 
+  coord_flip()
+```
+
+## can you put this in descending order?
+*(bonus) Can you do it without using a method I already mentioned?*
+```{r}
+mpg %>% 
+  count(class) %>% 
+  mutate(class = fct_reorder(class, n, sum)) %>% 
+  ggplot(aes(class, n)) +
+  geom_col() + 
+  coord_flip()
+```
+
+## too many bars
+```{r}
+ggplot(mpg, aes(model)) +
+  geom_bar() +
+  coord_flip()
+```
+
+## too many bars: `fct_lump()`
+```{r}
+ggplot(
+  mpg, 
+  aes(x = fct_lump(manufacturer, 5) %>% fct_infreq() %>% fct_rev())
+) +
+  geom_bar() +
+  coord_flip()
+```
+
+## order of fill
+```{r}
+ggplot(mpg, aes(manufacturer, fill = (cyl == 8))) +
+  geom_bar() +
+  coord_flip()
+```
+
+## order of fill
+```{r}
+mpg %>% 
+  mutate(
+    cyl_8 = (cyl == 8),
+    manufacturer = fct_reorder(manufacturer, cyl_8, sum)
+  ) %>% 
+  ggplot(aes(manufacturer, fill = cyl_8)) +
+  geom_bar() +
+  coord_flip()
+```
+
+## can you show the top 3 classes and ordered by `cyl != 8`?
+
+## can you swap the `TRUE` & `FALSE` colors of the manufacturer plot?
+
 ## `facet_grid()` vs `facet_wrap()`
+```{r}
+
+```
+
+## `scale_`[color/fill]`_identity()`
 
 ## apect.ratio (coord_fixed or theme), golden ratio 1.6
 
