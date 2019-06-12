@@ -17,7 +17,7 @@ library(tidyverse)
 ```
 
 ## today's talk
-
+https://bit.ly/2Wt7nkQ
 * Intro
 * What is ggplot
 * Tips & Tricks
@@ -33,6 +33,7 @@ library(tidyverse)
 
 @yake_84
 
+https://bit.ly/2Wt7nkQ
 
 ## what is ggplot?
  * grammar of graphics
