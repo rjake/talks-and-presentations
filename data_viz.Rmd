@@ -204,10 +204,60 @@ mpg %>%
 ## Give an example of a bad/mediocre chart, ask to partner up and how to 
 ## improve -> post to google slides?
 
-Resources
-R4DS
-ggplot extensions
-spider/radar plot
-gganimate
-ggrepel
-stackoverflow
+##Resources
+
+* R4DS
+* my `simplecolors` package
+* `ggplot2` addins
+* `ggplot2` extensions
+* https://rjake.shinyapps.io/data_explorer/
+
+
+```{r}
+#install.packages("addinslist")     ####devtools::install_github("rstudio/addinexamples", type = "source")
+#install.packages("styler")
+```
+
+## `simplecolors`
+
+https://rjake.github.io/simplecolors/articles/intro.html
+
+```{r}
+#devtools::install_github("rjake/simplecolors")
+library(simplecolors)
+```
+
+
+## Addins:
+```{r}
+addinslist::addinslistAddin()
+
+#esquisse
+  esquisse:::esquisser()
+  esquisse:::esquisser(mpg)
+
+p <-
+  ggplot(mpg, aes(cty, hwy)) + 
+  geom_point()
+
+# ggThemeAssist::ggThemeAssistGadget(p)
+
+# ggedit(p)
+
+# colourpicker
+  colourpicker:::colourPickerAddin() # also colourpicker:::plotHelperAddin()
+
+
+```
+
+## Extensions
+
+* spider/radar plots
+* gganimate
+* ggrepel
+
+
+## Stackoverflow
+
+* try `datapasta` to include a minimal reprex 
+* include images
