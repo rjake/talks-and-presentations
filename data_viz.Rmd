@@ -53,7 +53,7 @@ p <-
  
  
 ## an example
-```{r grammar, out.width=c('50%', '50%'), fig.show='hold'}
+```{r grammar, out.width = c("50%", "50%"), fig.show = "hold"}
 p
 
 p + coord_polar()
@@ -69,7 +69,7 @@ p + coord_polar()
 * `geom_point(aes(color = class, size = n), ...)`
 * `geom_point(aes(...), color = "blue", size = 2)`
 
-```{r out.width=c('50%', '50%'), fig.show='hold', echo=FALSE}
+```{r out.width = c("50%", "50%"), fig.show = "hold", echo = FALSE}
 df <-
   mpg %>% 
   count(cyl = factor(cyl), cty, hwy)
@@ -83,7 +83,7 @@ ggplot(df, aes(x = cty, y = hwy)) +
 ```
 
 
-## tips & tricks
+# Tips & Tricks
 
 ## descending bar charts
 
@@ -177,46 +177,218 @@ mpg %>%
   coord_flip()
 ```
 
-## can you show the top 3 classes and ordered by `cyl != 8`?
+# can you show the top 3 classes ordered by cyl != 8?
 
-## can you swap the `TRUE` & `FALSE` colors of the manufacturer plot?
+# can you swap the `TRUE` & `FALSE` colors of the manufacturer plot?
 
 ## `facet_grid()` vs `facet_wrap()`
 ```{r}
-
+p <-
+  mpg %>% 
+  filter(class != "2seater", cyl != 5) %>% 
+  ggplot(aes(cty, hwy, color = class)) + 
+  geom_count(alpha = 0.5) +
+  lims(x = c(0, NA), y = c(0, NA)) + # can also use xlim() or scale_x_continuous
+  guides(color = FALSE) +
+  theme(aspect.ratio = 1)
 ```
 
-## `scale_`[color/fill]`_identity()`
-
-## apect.ratio (coord_fixed or theme), golden ratio 1.6
-
-## zooming in on data ex. boxplot (coord_cartesian)
-
-
-## Best practices
-
-## Multiple series overtime -> heatmap
-
-## Not everything needs a color
-
-## Highlight the data the user needs to act on
-
-## Give an example of a bad/mediocre chart, ask to partner up and how to 
-## improve -> post to google slides?
-
-##Resources
-
-* R4DS
-* my `simplecolors` package
-* `ggplot2` addins
-* `ggplot2` extensions
-* https://rjake.shinyapps.io/data_explorer/
-
+## facet_grid: new syntax
 
 ```{r}
-#install.packages("addinslist")     ####devtools::install_github("rstudio/addinexamples", type = "source")
-#install.packages("styler")
+# this is the new syntax, replaces `facet_grid(~class)`
+p + facet_grid(cols = vars(class))
 ```
+
+## facets: scales
+
+```{r}
+# this is the old syntax, scales allows the x & y to vary
+# also "free_x", "free_y"
+p + facet_grid(cols = vars(class), scales = "free") 
+```
+
+## facets: scales & space
+
+```{r}
+p + facet_grid(cols = vars(class), scales = "free", space = "free")
+```
+
+## facets: margins
+
+```{r}
+p + 
+  facet_grid(
+    rows = vars(year),
+    cols = vars(class),
+    margins = TRUE
+  )
+```
+
+## facet_wrap: # of columns/rows
+
+```{r}
+# also nrow
+p + facet_wrap(~class, ncol = 3)
+```
+
+## facets: (a + b)
+
+```{r}
+# also works with facet_grid
+p + facet_wrap(~class + year, nrow = 2)
+```
+
+## `scale_*_identity()`
+
+Sometimes I want to have better control over colors & sizes. 
+
+Here, I am hard coding the colors
+
+```{r}
+df <-
+  mpg %>%
+  mutate(category = 
+    case_when(
+      cty < 14 ~ "coral",
+      cty > 19 ~ "turquoise",
+      TRUE ~ "grey40"
+    )
+  )
+```
+
+## `scale_color_identity()`
+
+```{r}
+ggplot(df, aes(cty, hwy, color = category)) +
+  geom_count() +
+  scale_color_identity()
+```
+
+## `scale_fill_identity()`
+
+```{r}
+
+ggplot(df, aes(cty, fill = category)) +
+  geom_dotplot() +
+  scale_fill_identity()
+```
+
+
+## The golden ratio 1:1.6
+
+* Try to give your charts the proportion of a credit card
+* Also look this up
+
+```{r, out.width = c("60%", "40%"), fig.show = "hold"}
+p <- ggplot(mpg, aes(cty)) + geom_bar()
+
+p + coord_fixed(1/10)
+p + theme(aspect.ratio = 1/1.6) # ratio depends on the units
+```
+
+
+## Trouble with outliers
+```{r, echo = FALSE}
+p <- ggplot(diamonds, aes("", price)) + geom_boxplot()
+
+find_limits <- function(x) {
+  floor(ggplot_build(x)$data[[1]][2:4])
+}
+
+p + coord_flip()
+```
+
+## Use `coord_cartesian()` to zoom in
+
+```{r}
+# find_limits() is a custom function
+bind_rows(
+  find_limits(p),
+  find_limits(p + ylim(0, 12000)),
+  find_limits(p + scale_y_continuous(limits = c(0, 12000))),
+  find_limits(p + coord_cartesian(ylim = c(0, 12000)))
+)
+
+```
+
+# Best practices
+
+## Dealing with spaghetti charts
+```{r echo = FALSE}
+set.seed(1234)
+df <-
+  expand.grid(
+    group = LETTERS[1:5],
+    x = as.Date(paste0("2019-01-", 1:30)),
+    KEEP.OUT.ATTRS = FALSE
+  ) %>% 
+  mutate(
+    rand = rnorm(-74:75, mean = 0, sd = 4),
+    y = ((row_number()/2) %/% 3) + rand,
+    category = factor(ntile(y, 4))
+  )
+  #mutate(y = row_number() %% 3 + row_number() %% 4 + row_number()/150)
+
+my_theme <-
+  theme(
+    panel.background = element_rect(fill = "white"),
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    aspect.ratio = 5/30,
+    legend.position = "bottom"
+  )
+```
+This is one of the most common questions to answer: **change for multiple categories over time**. This often results in a chart like the one below. It is hard to read but there are some ways you can help your audience
+```{r}
+ggplot(df, aes(x, y, color = group)) + 
+  geom_line()
+```
+
+## Highlight the focus & use an informative title
+```{r}
+ggplot(df, aes(x, y, group = group)) + 
+  geom_line(data = filter(df, group != "A"), color = "grey", size = 1) +
+  geom_line(data = filter(df, group == "A"), color = "black", size = 2) +
+  labs(title = "Group A is currently in the lead")
+```
+
+## Try a heatmap but beware
+[colorblind palette viewer](https://davidmathlogic.com/colorblind/#%2334804B-%236FD46B-%23D5D6D6-%23E5E6E6-%23B53D13)
+```{r}
+ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) + 
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "red", mid = "yellow", high = "darkgreen", midpoint = 12
+  ) +
+  my_theme +
+  labs(title = "An improvement, but not colorblind friendly")
+```
+
+
+## Not every point needs a color
+
+```{r}
+ggplot(df, aes(x, fct_reorder(group, y), fill = category)) + 
+  geom_tile(color = "white", size = 0.1) +
+  geom_vline(xintercept = as.Date("2019-01-29")+0.5, size = 1.5) +
+  scale_fill_manual(
+    values = c("grey90", "grey85", "palegreen3", "seagreen4"),
+    labels = c("poor", "good", "very good", "excellent")
+  ) +
+  my_theme +
+  labs(title = "All teams now performing their best")
+```
+
+# Extensions & Addins
+
+## Extensions & Addins
+* my `simplecolors` package
+* [ggplot addins](https://github.com/daattali/addinslist)
+* [ggplot extensions](https://www.ggplot2-exts.org/ggiraph.html)
+* https://rjake.shinyapps.io/data_explorer/
+* [R4DS](https://r4ds.had.co.nz/)
+
 
 ## `simplecolors`
 
@@ -225,39 +397,60 @@ https://rjake.github.io/simplecolors/articles/intro.html
 ```{r}
 #devtools::install_github("rjake/simplecolors")
 library(simplecolors)
+simplecolors::show_colors(labels = FALSE)
 ```
 
+## `simplecolors`
 
-## Addins:
-```{r}
-addinslist::addinslistAddin()
+Three main functions:
 
-#esquisse
-  esquisse:::esquisser()
-  esquisse:::esquisser(mpg)
+* `sc()`
+* `sc_across()`
+* `sc_*()`
+
+## `addinslist`:
+
+`addinslist::addinslistAddin()`
+
+```{r eval = FALSE, echo = TRUE}
+# install.packages("addinslist")
+# install.packages("esquisse")
+# install.packages("ggedit")
+# install.packages("ggThemeAssist")
+# install.packages("colourpicker")
+
+data(iris)
+data(mpg)
 
 p <-
   ggplot(mpg, aes(cty, hwy)) + 
   geom_point()
+```
 
+## Addins in action
+```{r eval = FALSE, echo = TRUE}
+#esquisse
+  esquisse:::esquisser()
+  esquisse:::esquisser(mpg)
+  
 # ggThemeAssist::ggThemeAssistGadget(p)
-
 # ggedit(p)
-
 # colourpicker
-  colourpicker:::colourPickerAddin() # also colourpicker:::plotHelperAddin()
-
-
 ```
 
 ## Extensions
 
-* spider/radar plots
-* gganimate
-* ggrepel
+* [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
+* [gganimate](https://gganimate.com/)
+* [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
+* [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
+* [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
+* [more](https://www.ggplot2-exts.org/ggiraph.html)
 
+# Go Explore
 
 ## Stackoverflow
 
-* try `datapasta` to include a minimal reprex 
+* try `datapasta` for a minimal reprex 
 * include images
+* incorporate `styler`
