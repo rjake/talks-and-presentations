@@ -5,6 +5,20 @@ date: "June 8, 2019"
 output: ioslides_presentation
 ---
 
+## TODO, eval = FALSE
+ - export to powerpoint
+ - explain pipe highlight that you pipe into ggplot
+ - exlain that I'm not always going to use the argument names
+ - preface that audience is for folks familiar with ggplot and tidyverse
+ - put answers at the end
+ - swap the first two exercises
+ - show plot first in facet
+ - show facet_wrap with scales = free
+ - move golden ratio to best practices
+ - remove coord_flip from boxplot - move to Appendix
+ - retitle: Take care when cropping data
+ - title for "Group A in the lead" shows wrong line
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -97,7 +111,7 @@ ggplot(mpg, aes(class)) +
 
 ## arrange by volume: `fct_infreq()`
 ```{r}
-mpg %>% 
+mpg %>%
   mutate(class = fct_infreq(class)) %>% 
   ggplot(aes(class)) + 
   geom_bar() + 
@@ -150,10 +164,13 @@ ggplot(mpg, aes(model)) +
 
 ## too many bars: `fct_lump()`
 ```{r}
-ggplot(
-  mpg, 
-  aes(x = fct_lump(manufacturer, 5) %>% fct_infreq() %>% fct_rev())
-) +
+mpg %>%
+  mutate(
+    manufacturer = fct_lump(manufacturer, 5),
+    manufacturer = fct_infreq(manufacturer),
+    manufacturer = fct_rev(manufacturer)
+  ) %>% 
+  ggplot(aes(x = manufacturer)) +
   geom_bar() +
   coord_flip()
 ```
@@ -380,6 +397,14 @@ ggplot(df, aes(x, fct_reorder(group, y), fill = category)) +
   labs(title = "All teams now performing their best")
 ```
 
+
+## Stackoverflow
+
+* try `datapasta` for a minimal reprex 
+* include images
+* incorporate `styler`
+
+
 # Extensions & Addins
 
 ## Extensions & Addins
@@ -447,10 +472,9 @@ p <-
 * [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
 * [more](https://www.ggplot2-exts.org/ggiraph.html)
 
-# Go Explore
+## Go Explore
 
-## Stackoverflow
+* find a function or feature that you think is interesting or useful
+* place screenshots here https://bit.ly/2XiG5C7
+* we'll share 
 
-* try `datapasta` for a minimal reprex 
-* include images
-* incorporate `styler`
