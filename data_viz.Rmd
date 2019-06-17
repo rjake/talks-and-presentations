@@ -5,20 +5,6 @@ date: "June 8, 2019"
 output: ioslides_presentation
 ---
 
-## TODO, eval = FALSE
- - export to powerpoint
- - explain pipe highlight that you pipe into ggplot
- - exlain that I'm not always going to use the argument names
- - preface that audience is for folks familiar with ggplot and tidyverse
- - put answers at the end
- - swap the first two exercises
- - show plot first in facet
- - show facet_wrap with scales = free
- - move golden ratio to best practices
- - remove coord_flip from boxplot - move to Appendix
- - retitle: Take care when cropping data
- - title for "Group A in the lead" shows wrong line
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -30,7 +16,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 ```
 
-## today's talk
+## Today's talk
 * https://bit.ly/2Wt7nkQ
 * Intro
 * What is ggplot
@@ -38,7 +24,7 @@ library(tidyverse)
 * Best Practices
 * Try it out
 
-## an intro
+## An intro
 
 * Jake Riley
 * Clinical Data Analyst at Children's Hospital of Philadelphia
@@ -49,7 +35,19 @@ library(tidyverse)
 
 https://bit.ly/2Wt7nkQ
 
-## what is ggplot?
+## Before we get started
+
+* this talk is aimed at intermediate `ggplot2` users
+* everything is within the `tidyverse` framework & R for Data Science (R4DS)
+* the pipe `%>%` is used in many places and allows us to create a sequence of manipulations
+
+`iris %>% arrange(Species)` is the same as `arrange(iris, Species)`
+
+* the `+` used with `ggplot()` is another type of pipe
+
+* you can pipe from a `dplyr` sequence into a `ggplot()` sequence
+
+## What is ggplot?
  * grammar of graphics
  * just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
  * the hope is that we will invent new types of charts
@@ -73,13 +71,14 @@ p
 p + coord_polar()
 ```
 
-## demystifying aes()
+## Demystifying `aes()`
 
 * `aes()` = aesthetics
 * dynamic, data driven **variables** go inside the `aes()`
 * constant, static **values** go outside
+* the first 2 arguments of `aes()` are `x` and `y` and I will mostly omit naming these
 
-## note the difference
+## Note the difference
 * `geom_point(aes(color = class, size = n), ...)`
 * `geom_point(aes(...), color = "blue", size = 2)`
 
@@ -93,13 +92,12 @@ ggplot(df, aes(x = cty, y = hwy)) +
 
 ggplot(df, aes(x = cty, y = hwy)) +
   geom_point(color = "blue", size = 2)
-
 ```
 
 
 # Tips & Tricks
 
-## descending bar charts
+## Descending bar charts
 
 The number one things I get asked is how to make a barchart go in descending order. 
 
@@ -109,7 +107,7 @@ ggplot(mpg, aes(class)) +
   coord_flip()
 ```
 
-## arrange by volume: `fct_infreq()`
+## Arrange by volume: `fct_infreq()`
 ```{r}
 mpg %>%
   mutate(class = fct_infreq(class)) %>% 
@@ -118,7 +116,7 @@ mpg %>%
   coord_flip()
 ```
 
-## arrange in descending order: `fct_rev()`
+## Arrange in descending order: `fct_rev()`
 ```{r, }
 mpg %>% 
   mutate(class = fct_infreq(class)) %>% 
@@ -127,14 +125,14 @@ mpg %>%
   coord_flip()
 ```
 
-## aggregated data: `fct_reorder()`
+## Aggregated data: `fct_reorder()`
 ```{r}
 mpg %>% 
   count(class) %>% 
   mutate(class = fct_reorder(class, n, sum))
 ```
 
-## aggregated data: `fct_reorder()`
+## Aggregated data: `fct_reorder()`
 ```{r}
 mpg %>% 
   count(class) %>% 
@@ -144,25 +142,21 @@ mpg %>%
   coord_flip()
 ```
 
-## can you put this in descending order?
-*(bonus) Can you do it without using a method I already mentioned?*
+## Q1: can you put this in descending order?
 ```{r}
-mpg %>% 
-  count(class) %>% 
-  mutate(class = fct_reorder(class, n, sum)) %>% 
-  ggplot(aes(class, n)) +
-  geom_col() + 
+ggplot(mpg, aes(drv)) +
+  geom_bar() + 
   coord_flip()
 ```
 
-## too many bars
+## Too many bars
 ```{r}
 ggplot(mpg, aes(model)) +
   geom_bar() +
   coord_flip()
 ```
 
-## too many bars: `fct_lump()`
+## Too many bars: `fct_lump()`
 ```{r}
 mpg %>%
   mutate(
@@ -175,14 +169,14 @@ mpg %>%
   coord_flip()
 ```
 
-## order of fill
+## Order of fill
 ```{r}
 ggplot(mpg, aes(manufacturer, fill = (cyl == 8))) +
   geom_bar() +
   coord_flip()
 ```
 
-## order of fill
+## Order of fill
 ```{r}
 mpg %>% 
   mutate(
@@ -194,9 +188,8 @@ mpg %>%
   coord_flip()
 ```
 
-# can you show the top 3 classes ordered by cyl != 8?
+# Q2: can you show the manufacturers with the highest proportion<br>*(bonus: can you make it 100% fill?)*
 
-# can you swap the `TRUE` & `FALSE` colors of the manufacturer plot?
 
 ## `facet_grid()` vs `facet_wrap()`
 ```{r}
@@ -208,6 +201,8 @@ p <-
   lims(x = c(0, NA), y = c(0, NA)) + # can also use xlim() or scale_x_continuous
   guides(color = FALSE) +
   theme(aspect.ratio = 1)
+
+p
 ```
 
 ## facet_grid: new syntax
@@ -220,7 +215,7 @@ p + facet_grid(cols = vars(class))
 ## facets: scales
 
 ```{r}
-# this is the old syntax, scales allows the x & y to vary
+# scales allows the x & y to vary
 # also "free_x", "free_y"
 p + facet_grid(cols = vars(class), scales = "free") 
 ```
@@ -247,6 +242,13 @@ p +
 ```{r}
 # also nrow
 p + facet_wrap(~class, ncol = 3)
+```
+
+## facet_wrap: scales
+
+```{r}
+# space does not work with facet_wrap()
+p + facet_wrap(~class, ncol = 3, scales = "free")
 ```
 
 ## facets: (a + b)
@@ -285,12 +287,13 @@ ggplot(df, aes(cty, hwy, color = category)) +
 ## `scale_fill_identity()`
 
 ```{r}
-
 ggplot(df, aes(cty, fill = category)) +
   geom_dotplot() +
   scale_fill_identity()
 ```
 
+
+# Best practices
 
 ## The golden ratio 1:1.6
 
@@ -305,32 +308,6 @@ p + theme(aspect.ratio = 1/1.6) # ratio depends on the units
 ```
 
 
-## Trouble with outliers
-```{r, echo = FALSE}
-p <- ggplot(diamonds, aes("", price)) + geom_boxplot()
-
-find_limits <- function(x) {
-  floor(ggplot_build(x)$data[[1]][2:4])
-}
-
-p + coord_flip()
-```
-
-## Use `coord_cartesian()` to zoom in
-
-```{r}
-# find_limits() is a custom function
-bind_rows(
-  find_limits(p),
-  find_limits(p + ylim(0, 12000)),
-  find_limits(p + scale_y_continuous(limits = c(0, 12000))),
-  find_limits(p + coord_cartesian(ylim = c(0, 12000)))
-)
-
-```
-
-# Best practices
-
 ## Dealing with spaghetti charts
 ```{r echo = FALSE}
 set.seed(1234)
@@ -342,7 +319,7 @@ df <-
   ) %>% 
   mutate(
     rand = rnorm(-74:75, mean = 0, sd = 4),
-    y = ((row_number()/2) %/% 3) + rand,
+    y = ((row_number()/2) %/% 3) + rand + 10,
     category = factor(ntile(y, 4))
   )
   #mutate(y = row_number() %% 3 + row_number() %% 4 + row_number()/150)
@@ -357,17 +334,19 @@ my_theme <-
   )
 ```
 This is one of the most common questions to answer: **change for multiple categories over time**. This often results in a chart like the one below. It is hard to read but there are some ways you can help your audience
+
 ```{r}
 ggplot(df, aes(x, y, color = group)) + 
   geom_line()
 ```
 
 ## Highlight the focus & use an informative title
+
 ```{r}
 ggplot(df, aes(x, y, group = group)) + 
-  geom_line(data = filter(df, group != "A"), color = "grey", size = 1) +
-  geom_line(data = filter(df, group == "A"), color = "black", size = 2) +
-  labs(title = "Group A is currently in the lead")
+  geom_line(data = filter(df, group != "B"), color = "grey", size = 1) +
+  geom_line(data = filter(df, group == "B"), color = "black", size = 2) +
+  labs(title = "Group B is currently in the lead")
 ```
 
 ## Try a heatmap but beware
@@ -388,50 +367,44 @@ ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) +
 ```{r}
 ggplot(df, aes(x, fct_reorder(group, y), fill = category)) + 
   geom_tile(color = "white", size = 0.1) +
-  geom_vline(xintercept = as.Date("2019-01-29")+0.5, size = 1.5) +
   scale_fill_manual(
     values = c("grey90", "grey85", "palegreen3", "seagreen4"),
     labels = c("poor", "good", "very good", "excellent")
   ) +
   my_theme +
-  labs(title = "All teams now performing their best")
+  labs(title = "All teams are now performing their best")
 ```
 
 
-## Stackoverflow
+# Partner activity: <br>Extensions & Addins
 
-* try `datapasta` for a minimal reprex 
-* include images
-* incorporate `styler`
+## Partner activity
 
+* left side: focus on extensions
+* right side: focus on add-ins
+* bonus: my `simplecolors` package
 
-# Extensions & Addins
+* with your partner, review the code and resources below
+* find a function or feature that you think is interesting or useful
+* place screenshots here https://bit.ly/2XiG5C7
+* you don't need to run the code, you can use images from the vignettes
+* we'll share at the end
+
 
 ## Extensions & Addins
-* my `simplecolors` package
-* [ggplot addins](https://github.com/daattali/addinslist)
 * [ggplot extensions](https://www.ggplot2-exts.org/ggiraph.html)
-* https://rjake.shinyapps.io/data_explorer/
-* [R4DS](https://r4ds.had.co.nz/)
+* [ggplot addins](https://github.com/daattali/addinslist)
+
+## Extensions
+
+* [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
+* [gganimate](https://gganimate.com/)
+* [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
+* [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
+* [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
+* [more](https://www.ggplot2-exts.org/ggiraph.html)
 
 
-## `simplecolors`
-
-https://rjake.github.io/simplecolors/articles/intro.html
-
-```{r}
-#devtools::install_github("rjake/simplecolors")
-library(simplecolors)
-simplecolors::show_colors(labels = FALSE)
-```
-
-## `simplecolors`
-
-Three main functions:
-
-* `sc()`
-* `sc_across()`
-* `sc_*()`
 
 ## `addinslist`:
 
@@ -454,27 +427,126 @@ p <-
 
 ## Addins in action
 ```{r eval = FALSE, echo = TRUE}
-#esquisse
+# esquisse
   esquisse:::esquisser()
   esquisse:::esquisser(mpg)
-  
-# ggThemeAssist::ggThemeAssistGadget(p)
-# ggedit(p)
-# colourpicker
+
+# others    
+  ggThemeAssist::ggThemeAssistGadget(p)
+  ggedit(p)
+  colourpicker::colourPicker()
 ```
 
-## Extensions
 
-* [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
-* [gganimate](https://gganimate.com/)
-* [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
-* [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
-* [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
-* [more](https://www.ggplot2-exts.org/ggiraph.html)
 
-## Go Explore
+## `simplecolors`
 
-* find a function or feature that you think is interesting or useful
-* place screenshots here https://bit.ly/2XiG5C7
-* we'll share 
+https://rjake.github.io/simplecolors/articles/intro.html
 
+```{r}
+#devtools::install_github("rjake/simplecolors")
+library(simplecolors)
+simplecolors::show_colors(labels = FALSE)
+```
+
+## `simplecolors`
+
+Three main functions:
+
+`sc()`   `sc_across()`   `sc_*()`
+
+```{r, eval = FALSE}
+p <-
+  ggplot(mpg, aes(hwy, fill = drv)) +
+  geom_density(alpha = 0.3)
+
+p + scale_fill_manual(values = sc("blue3", "red3", "violet3"))
+p + scale_fill_manual(values = sc_pink(light = c(1,3,5)))
+p + scale_fill_manual(values = sc_across("RTV", light = 4, sat = "bright"))
+```
+
+```{r, echo = FALSE}
+p <-
+  ggplot(mpg, aes(hwy, fill = drv)) +
+  geom_density(alpha = 0.3)
+
+p1 <- p + scale_fill_manual(values = sc("blue3", "red3", "violet3"))
+p2 <- p + scale_fill_manual(values = sc_pink(light = c(1,3,5)))
+p3 <- p + scale_fill_manual(values = sc_across("RTV", light = 4, sat = "bright"))
+gridExtra::grid.arrange(p1,p2,p3, nrow = 1)
+```
+
+
+# Appendix
+
+## R4DS
+
+R for Data Science is a book all about the `tidyverse`. It is less "data science-y" and more about data manipulation and visualization. It is free online [here](https://r4ds.had.co.nz/) as well as available for sale.
+
+
+## Stackoverflow
+
+* try `datapasta` for a minimal reprex 
+* include images
+* incorporate `styler`
+
+
+## Cheatsheet
+
+https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf
+
+## Take care when cropping data
+
+The usual methods to "zoom in" can yield unexpected results when stat_ geoms are used. For example, `geom_boxplot()` calls `stat_boxplot()` and filters out data **before** doing the stats and your boxplot will keep readjusting the quartiles
+```{r, echo = FALSE}
+p <- 
+  ggplot(diamonds, aes("", price)) + 
+  geom_boxplot()
+
+p
+
+find_limits <- function(x) {
+  floor(ggplot_build(x)$data[[1]][2:4])
+}
+```
+
+## Use `coord_cartesian()` to zoom in
+
+Do not use `ylim()` or `scale_*_continuous()`
+```{r}
+# find_limits() is a custom function
+bind_rows(
+  find_limits(p),
+  find_limits(p + ylim(0, 12000)),
+  find_limits(p + scale_y_continuous(limits = c(0, 12000))),
+  find_limits(p + coord_cartesian(ylim = c(0, 12000)))
+)
+
+```
+
+# Answers
+
+## Q1
+```{r}
+mpg %>% 
+  mutate(
+    drv = fct_infreq(drv) %>% fct_rev()
+  ) %>% 
+  ggplot(aes(drv)) +
+  geom_bar() + 
+  coord_flip()
+
+```
+
+## Q2
+
+```{r}
+mpg %>% 
+  mutate(
+    cyl_8 = (cyl == 8),
+    manufacturer = fct_reorder(manufacturer, cyl_8, mean)
+  ) %>% 
+  ggplot(aes(manufacturer, fill = cyl_8)) +
+  geom_bar(position = "fill") +
+  coord_flip()
+```
