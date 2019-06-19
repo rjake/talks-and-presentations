@@ -1,8 +1,10 @@
 ---
-title: "Data Viz"
-author: "Jake Riley"
-date: "June 8, 2019"
-output: ioslides_presentation
+title: "Data Visualization in R"
+subtitle: "https://bit.ly/2Wt7nkQ"
+author: "Jake Riley  June 19, 2019"
+output: 
+  powerpoint_presentation:
+    reference_doc: reference.pptx
 ---
 
 ```{r setup, include=FALSE}
@@ -10,26 +12,25 @@ knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
   message = FALSE,
-  out.height = "300px"
+  out.height = "300px",
+  cache = TRUE
 )
-
-library(tidyverse)
 ```
 
 ## Today's talk
-* https://bit.ly/2Wt7nkQ
-* Intro
-* What is ggplot
-* Tips & Tricks
-* Best Practices
-* Try it out
+- https://bit.ly/2Wt7nkQ
+- Intro
+- What is ggplot
+- Tips & Tricks
+- Best Practices
+- Try it out
 
 ## An intro
 
-* Jake Riley
-* Clinical Data Analyst at Children's Hospital of Philadelphia
-* Avid `ggplot2` answerer on stackoverflow
-* dogdad
+- Jake Riley
+- Clinical Data Analyst at Children's Hospital of Philadelphia
+- Avid `ggplot2` answerer on stackoverflow
+- dogdad
 
 @yake_84
 
@@ -37,61 +38,69 @@ https://bit.ly/2Wt7nkQ
 
 ## Before we get started
 
-* this talk is aimed at intermediate `ggplot2` users
-* everything is within the `tidyverse` framework & R for Data Science (R4DS)
-* the pipe `%>%` is used in many places and allows us to create a sequence of manipulations
+- this talk is aimed at intermediate `ggplot2` users
+- everything is within the `tidyverse` framework & R for Data Science (R4DS)
+- the pipe `%>%` is used in many places and allows us to create a sequence of manipulations
 
 `iris %>% arrange(Species)` is the same as `arrange(iris, Species)`
 
-* the `+` used with `ggplot()` is another type of pipe
+- the `+` used with `ggplot()` is another type of pipe
 
-* you can pipe from a `dplyr` sequence into a `ggplot()` sequence
+- you can pipe from a `dplyr` sequence into a `ggplot()` sequence
 
 ## What is ggplot?
- * grammar of graphics
- * just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
- * the hope is that we will invent new types of charts
+ - grammar of graphics
+ - just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
+ - the hope is that we will invent new types of charts
  
 ```{r}
+library(tidyverse)
+
 p <- 
   ggplot(mpg) + 
-  geom_count(
-    aes(cty, hwy, color = class), 
-    alpha = 0.8
-  ) +
-  theme_bw()
+  geom_count(aes(cty, hwy), alpha = 0.5, color = "navyblue") +
+  theme_bw() +
+  theme(legend.position = "none")
 
 ```
  
  
 ## an example
-```{r grammar, out.width = c("50%", "50%"), fig.show = "hold"}
+```{r grammar, eval = FALSE}
 p
 
 p + coord_polar()
 ```
 
+```{r}
+gridExtra::grid.arrange(
+  p,
+  p + coord_polar(), 
+  ncol = 1
+)
+```
+
 ## Demystifying `aes()`
 
-* `aes()` = aesthetics
-* dynamic, data driven **variables** go inside the `aes()`
-* constant, static **values** go outside
-* the first 2 arguments of `aes()` are `x` and `y` and I will mostly omit naming these
+- `aes()` = aesthetics
+- dynamic, data driven **variables** go inside the `aes()`
+- constant, static **values** go outside
+- the first 2 arguments of `aes()` are `x` and `y` and I will mostly omit naming these
 
 ## Note the difference
-* `geom_point(aes(color = class, size = n), ...)`
-* `geom_point(aes(...), color = "blue", size = 2)`
+- `geom_point(aes(color = class, size = n), ...)`
+- `geom_point(aes(...), color = "blue", size = 2)`
 
 ```{r out.width = c("50%", "50%"), fig.show = "hold", echo = FALSE}
 df <-
   mpg %>% 
   count(cyl = factor(cyl), cty, hwy)
 
-ggplot(df, aes(x = cty, y = hwy)) +
-  geom_point(aes(color = cyl, size = n))
-
-ggplot(df, aes(x = cty, y = hwy)) +
-  geom_point(color = "blue", size = 2)
+gridExtra::grid.arrange(
+  ggplot(df, aes(x = cty, y = hwy)) + geom_point(aes(color = cyl, size = n)),
+  ggplot(df, aes(x = cty, y = hwy)) + geom_point(color = "blue", size = 2),
+  nrow = 1
+)
 ```
 
 
@@ -132,7 +141,7 @@ mpg %>%
   mutate(class = fct_reorder(class, n, sum))
 ```
 
-## Aggregated data: `fct_reorder()`
+## Aggregated data: `geom_col()`
 ```{r}
 mpg %>% 
   count(class) %>% 
@@ -198,14 +207,15 @@ p <-
   filter(class != "2seater", cyl != 5) %>% 
   ggplot(aes(cty, hwy, color = class)) + 
   geom_count(alpha = 0.5) +
-  lims(x = c(0, NA), y = c(0, NA)) + # can also use xlim() or scale_x_continuous
+  lims(x = c(0, NA), y = c(0, NA)) + 
+  # can also use xlim() or scale_x_continuous
   guides(color = FALSE) +
   theme(aspect.ratio = 1)
 
 p
 ```
 
-## facet_grid: new syntax
+## `facet_grid()`: new syntax
 
 ```{r}
 # this is the new syntax, replaces `facet_grid(~class)`
@@ -297,14 +307,18 @@ ggplot(df, aes(cty, fill = category)) +
 
 ## The golden ratio 1:1.6
 
-* Try to give your charts the proportion of a credit card
-* Also look this up
+- Try to give your charts the proportion of a credit card
+- Also look this up
 
 ```{r, out.width = c("60%", "40%"), fig.show = "hold"}
-p <- ggplot(mpg, aes(cty)) + geom_bar()
+p <- ggplot(mpg, aes(cty)) + geom_area(stat = "count")
 
-p + coord_fixed(1/10)
-p + theme(aspect.ratio = 1/1.6) # ratio depends on the units
+gridExtra::grid.arrange(
+  p + coord_fixed(1/10),
+  p + theme(aspect.ratio = 1/1.6), # ratio depends on the units
+  nrow = 1,
+  widths = c(0.7, 0.3)
+)
 ```
 
 
@@ -333,7 +347,7 @@ my_theme <-
     legend.position = "bottom"
   )
 ```
-This is one of the most common questions to answer: **change for multiple categories over time**. This often results in a chart like the one below. It is hard to read but there are some ways you can help your audience
+This is one of the most common questions to answer: **change for multiple categories over time**. This often results in a chart like the one here It is hard to read but there are some ways you can help your audience
 
 ```{r}
 ggplot(df, aes(x, y, color = group)) + 
@@ -350,7 +364,7 @@ ggplot(df, aes(x, y, group = group)) +
 ```
 
 ## Try a heatmap but beware
-[colorblind palette viewer](https://davidmathlogic.com/colorblind/#%2334804B-%236FD46B-%23D5D6D6-%23E5E6E6-%23B53D13)
+
 ```{r}
 ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) + 
   geom_tile(color = "white") +
@@ -361,6 +375,7 @@ ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) +
   labs(title = "An improvement, but not colorblind friendly")
 ```
 
+[colorblind palette viewer (link)](https://davidmathlogic.com/colorblind/#%2334804B-%236FD46B-%23D5D6D6-%23E5E6E6-%23B53D13)
 
 ## Not every point needs a color
 
@@ -376,33 +391,33 @@ ggplot(df, aes(x, fct_reorder(group, y), fill = category)) +
 ```
 
 
-# Partner activity: <br>Extensions & Addins
+# Partner Activity: Extensions & Addins
 
 ## Partner activity
 
-* left side: focus on extensions
-* right side: focus on add-ins
-* bonus: my `simplecolors` package
+- left side: focus on extensions
+- right side: focus on add-ins
+- bonus: my `simplecolors` package
 
-* with your partner, review the code and resources below
-* find a function or feature that you think is interesting or useful
-* place screenshots here https://bit.ly/2XiG5C7
-* you don't need to run the code, you can use images from the vignettes
-* we'll share at the end
+- with your partner, review the code and resources below
+- find a function or feature that you think is interesting or useful
+- place screenshots here https://bit.ly/2XiG5C7
+- you don't need to run the code, you can use images from the vignettes
+- we'll share at the end
 
 
 ## Extensions & Addins
-* [ggplot extensions](https://www.ggplot2-exts.org/ggiraph.html)
-* [ggplot addins](https://github.com/daattali/addinslist)
+- [ggplot extensions](https://www.ggplot2-exts.org/ggiraph.html)
+- [ggplot addins](https://github.com/daattali/addinslist)
 
 ## Extensions
 
-* [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
-* [gganimate](https://gganimate.com/)
-* [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
-* [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
-* [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
-* [more](https://www.ggplot2-exts.org/ggiraph.html)
+- [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
+- [gganimate](https://gganimate.com/)
+- [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
+- [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
+- [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
+- [more](https://www.ggplot2-exts.org/ggiraph.html)
 
 
 
@@ -486,9 +501,9 @@ R for Data Science is a book all about the `tidyverse`. It is less "data science
 
 ## Stackoverflow
 
-* try `datapasta` for a minimal reprex 
-* include images
-* incorporate `styler`
+- try `datapasta` for a minimal reprex 
+- include images rather than links
+- incorporate `styler`
 
 
 ## Cheatsheet
