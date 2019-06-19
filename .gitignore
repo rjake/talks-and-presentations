@@ -1,3 +1,5 @@
 
 .Rproj.user
 .Rhistory
+data_viz_cache/*
+data_viz_files/*
