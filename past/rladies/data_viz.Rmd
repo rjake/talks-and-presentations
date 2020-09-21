@@ -1,0 +1,567 @@
+---
+title: "Data Visualization in R"
+subtitle: "https://bit.ly/2Wt7nkQ"
+author: "Jake Riley  June 19, 2019"
+output: 
+  powerpoint_presentation:
+    reference_doc: reference.pptx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  out.height = "300px",
+  cache = TRUE
+)
+```
+
+## Today's talk
+- https://bit.ly/2Wt7nkQ
+- Intro
+- What is ggplot
+- Tips & Tricks
+- Best Practices
+- Try it out
+
+## An intro
+
+- Jake Riley
+- Clinical Data Analyst at Children's Hospital of Philadelphia
+- Avid `ggplot2` answerer on stackoverflow
+- dogdad
+
+@yake_84
+
+https://bit.ly/2Wt7nkQ
+
+## Before we get started
+
+- this talk is aimed at intermediate `ggplot2` users
+- everything is within the `tidyverse` framework & R for Data Science (R4DS)
+- the pipe `%>%` is used in many places and allows us to create a sequence of manipulations
+
+`iris %>% arrange(Species)` is the same as `arrange(iris, Species)`
+
+- the `+` used with `ggplot()` is another type of pipe
+
+- you can pipe from a `dplyr` sequence into a `ggplot()` sequence
+
+## What is ggplot?
+ - grammar of graphics
+ - just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
+ - the hope is that we will invent new types of charts
+ 
+```{r}
+library(tidyverse)
+
+p <- 
+  ggplot(mpg) + 
+  geom_count(aes(cty, hwy), alpha = 0.5, color = "navyblue") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+```
+ 
+ 
+## an example
+```{r grammar, eval = FALSE}
+p
+
+p + coord_polar()
+```
+
+```{r}
+gridExtra::grid.arrange(
+  p,
+  p + coord_polar(), 
+  ncol = 1
+)
+```
+
+## Demystifying `aes()`
+
+- `aes()` = aesthetics
+- dynamic, data driven **variables** go inside the `aes()`
+- constant, static **values** go outside
+- the first 2 arguments of `aes()` are `x` and `y` and I will mostly omit naming these
+
+## Note the difference
+- `geom_point(aes(color = class, size = n), ...)`
+- `geom_point(aes(...), color = "blue", size = 2)`
+
+```{r out.width = c("50%", "50%"), fig.show = "hold", echo = FALSE}
+df <-
+  mpg %>% 
+  count(cyl = factor(cyl), cty, hwy)
+
+gridExtra::grid.arrange(
+  ggplot(df, aes(x = cty, y = hwy)) + geom_point(aes(color = cyl, size = n)),
+  ggplot(df, aes(x = cty, y = hwy)) + geom_point(color = "blue", size = 2),
+  nrow = 1
+)
+```
+
+
+# Tips & Tricks
+
+## Descending bar charts
+
+The number one things I get asked is how to make a barchart go in descending order. 
+
+```{r}
+ggplot(mpg, aes(class)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## Arrange by volume: `fct_infreq()`
+```{r}
+mpg %>%
+  mutate(class = fct_infreq(class)) %>% 
+  ggplot(aes(class)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## Arrange in descending order: `fct_rev()`
+```{r, }
+mpg %>% 
+  mutate(class = fct_infreq(class)) %>% 
+  ggplot(aes(fct_rev(class))) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## Aggregated data: `fct_reorder()`
+```{r}
+mpg %>% 
+  count(class) %>% 
+  mutate(class = fct_reorder(class, n, sum))
+```
+
+## Aggregated data: `geom_col()`
+```{r}
+mpg %>% 
+  count(class) %>% 
+  mutate(class = fct_reorder(class, n, sum)) %>% 
+  ggplot(aes(class, n)) +
+  geom_col() + 
+  coord_flip()
+```
+
+## Q1: can you put this in descending order?
+```{r}
+ggplot(mpg, aes(drv)) +
+  geom_bar() + 
+  coord_flip()
+```
+
+## Too many bars
+```{r}
+ggplot(mpg, aes(model)) +
+  geom_bar() +
+  coord_flip()
+```
+
+## Too many bars: `fct_lump()`
+```{r}
+mpg %>%
+  mutate(
+    manufacturer = fct_lump(manufacturer, 5),
+    manufacturer = fct_infreq(manufacturer),
+    manufacturer = fct_rev(manufacturer)
+  ) %>% 
+  ggplot(aes(x = manufacturer)) +
+  geom_bar() +
+  coord_flip()
+```
+
+## Order of fill
+```{r}
+ggplot(mpg, aes(manufacturer, fill = (cyl == 8))) +
+  geom_bar() +
+  coord_flip()
+```
+
+## Order of fill
+```{r}
+mpg %>% 
+  mutate(
+    cyl_8 = (cyl == 8),
+    manufacturer = fct_reorder(manufacturer, cyl_8, sum)
+  ) %>% 
+  ggplot(aes(manufacturer, fill = cyl_8)) +
+  geom_bar() +
+  coord_flip()
+```
+
+# Q2: can you show the manufacturers with the highest proportion<br>*(bonus: can you make it 100% fill?)*
+
+
+## `facet_grid()` vs `facet_wrap()`
+```{r}
+p <-
+  mpg %>% 
+  filter(class != "2seater", cyl != 5) %>% 
+  ggplot(aes(cty, hwy, color = class)) + 
+  geom_count(alpha = 0.5) +
+  lims(x = c(0, NA), y = c(0, NA)) + 
+  # can also use xlim() or scale_x_continuous
+  guides(color = FALSE) +
+  theme(aspect.ratio = 1)
+
+p
+```
+
+## `facet_grid()`: new syntax
+
+```{r}
+# this is the new syntax, replaces `facet_grid(~class)`
+p + facet_grid(cols = vars(class))
+```
+
+## facets: scales
+
+```{r}
+# scales allows the x & y to vary
+# also "free_x", "free_y"
+p + facet_grid(cols = vars(class), scales = "free") 
+```
+
+## facets: scales & space
+
+```{r}
+p + facet_grid(cols = vars(class), scales = "free", space = "free")
+```
+
+## facets: margins
+
+```{r}
+p + 
+  facet_grid(
+    rows = vars(year),
+    cols = vars(class),
+    margins = TRUE
+  )
+```
+
+## facet_wrap: # of columns/rows
+
+```{r}
+# also nrow
+p + facet_wrap(~class, ncol = 3)
+```
+
+## facet_wrap: scales
+
+```{r}
+# space does not work with facet_wrap()
+p + facet_wrap(~class, ncol = 3, scales = "free")
+```
+
+## facets: (a + b)
+
+```{r}
+# also works with facet_grid
+p + facet_wrap(~class + year, nrow = 2)
+```
+
+## `scale_*_identity()`
+
+Sometimes I want to have better control over colors & sizes. 
+
+Here, I am hard coding the colors
+
+```{r}
+df <-
+  mpg %>%
+  mutate(category = 
+    case_when(
+      cty < 14 ~ "coral",
+      cty > 19 ~ "turquoise",
+      TRUE ~ "grey40"
+    )
+  )
+```
+
+## `scale_color_identity()`
+
+```{r}
+ggplot(df, aes(cty, hwy, color = category)) +
+  geom_count() +
+  scale_color_identity()
+```
+
+## `scale_fill_identity()`
+
+```{r}
+ggplot(df, aes(cty, fill = category)) +
+  geom_dotplot() +
+  scale_fill_identity()
+```
+
+
+# Best practices
+
+## The golden ratio 1:1.6
+
+- Try to give your charts the proportion of a credit card
+- Also look this up
+
+```{r, out.width = c("60%", "40%"), fig.show = "hold"}
+p <- ggplot(mpg, aes(cty)) + geom_area(stat = "count")
+
+gridExtra::grid.arrange(
+  p + coord_fixed(1/10),
+  p + theme(aspect.ratio = 1/1.6), # ratio depends on the units
+  nrow = 1,
+  widths = c(0.7, 0.3)
+)
+```
+
+
+## Dealing with spaghetti charts
+```{r echo = FALSE}
+set.seed(1234)
+df <-
+  expand.grid(
+    group = LETTERS[1:5],
+    x = as.Date(paste0("2019-01-", 1:30)),
+    KEEP.OUT.ATTRS = FALSE
+  ) %>% 
+  mutate(
+    rand = rnorm(-74:75, mean = 0, sd = 4),
+    y = ((row_number()/2) %/% 3) + rand + 10,
+    category = factor(ntile(y, 4))
+  )
+  #mutate(y = row_number() %% 3 + row_number() %% 4 + row_number()/150)
+
+my_theme <-
+  theme(
+    panel.background = element_rect(fill = "white"),
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    aspect.ratio = 5/30,
+    legend.position = "bottom"
+  )
+```
+This is one of the most common questions to answer: **change for multiple categories over time**. This often results in a chart like the one here It is hard to read but there are some ways you can help your audience
+
+```{r}
+ggplot(df, aes(x, y, color = group)) + 
+  geom_line()
+```
+
+## Highlight the focus & use an informative title
+
+```{r}
+ggplot(df, aes(x, y, group = group)) + 
+  geom_line(data = filter(df, group != "B"), color = "grey", size = 1) +
+  geom_line(data = filter(df, group == "B"), color = "black", size = 2) +
+  labs(title = "Group B is currently in the lead")
+```
+
+## Try a heatmap but beware
+
+```{r}
+ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) + 
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "red", mid = "yellow", high = "darkgreen", midpoint = 12
+  ) +
+  my_theme +
+  labs(title = "An improvement, but not colorblind friendly")
+```
+
+[colorblind palette viewer (link)](https://davidmathlogic.com/colorblind/#%2334804B-%236FD46B-%23D5D6D6-%23E5E6E6-%23B53D13)
+
+## Not every point needs a color
+
+```{r}
+ggplot(df, aes(x, fct_reorder(group, y), fill = category)) + 
+  geom_tile(color = "white", size = 0.1) +
+  scale_fill_manual(
+    values = c("grey90", "grey85", "palegreen3", "seagreen4"),
+    labels = c("poor", "good", "very good", "excellent")
+  ) +
+  my_theme +
+  labs(title = "All teams are now performing their best")
+```
+
+
+# Partner Activity: Extensions & Addins
+
+## Partner activity
+
+- left side: focus on extensions
+- right side: focus on add-ins
+- bonus: my `simplecolors` package
+
+- with your partner, review the code and resources below
+- find a function or feature that you think is interesting or useful
+- place screenshots here https://bit.ly/2XiG5C7
+- you don't need to run the code, you can use images from the vignettes
+- we'll share at the end
+
+
+## Extensions & Addins
+- [ggplot extensions](https://www.ggplot2-exts.org/ggiraph.html)
+- [ggplot addins](https://github.com/daattali/addinslist)
+
+## Extensions
+
+- [ggradar - spider/radar plots](https://github.com/ricardo-bion/ggradar)
+- [gganimate](https://gganimate.com/)
+- [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html)
+- [ggforce](https://cran.rstudio.com/web/packages/ggforce/vignettes/Visual_Guide.html)
+- [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
+- [more](https://www.ggplot2-exts.org/ggiraph.html)
+
+
+
+## `addinslist`:
+
+`addinslist::addinslistAddin()`
+
+```{r eval = FALSE, echo = TRUE}
+# install.packages("addinslist")
+# install.packages("esquisse")
+# install.packages("ggedit")
+# install.packages("ggThemeAssist")
+# install.packages("colourpicker")
+
+data(iris)
+data(mpg)
+
+p <-
+  ggplot(mpg, aes(cty, hwy)) + 
+  geom_point()
+```
+
+## Addins in action
+```{r eval = FALSE, echo = TRUE}
+# esquisse
+  esquisse:::esquisser()
+  esquisse:::esquisser(mpg)
+
+# others    
+  ggThemeAssist::ggThemeAssistGadget(p)
+  ggedit(p)
+  colourpicker::colourPicker()
+```
+
+
+
+## `simplecolors`
+
+https://rjake.github.io/simplecolors/articles/intro.html
+
+```{r}
+#devtools::install_github("rjake/simplecolors")
+library(simplecolors)
+simplecolors::show_colors(labels = FALSE)
+```
+
+## `simplecolors`
+
+Three main functions:
+
+`sc()`   `sc_across()`   `sc_*()`
+
+```{r, eval = FALSE}
+p <-
+  ggplot(mpg, aes(hwy, fill = drv)) +
+  geom_density(alpha = 0.3)
+
+p + scale_fill_manual(values = sc("blue3", "red3", "violet3"))
+p + scale_fill_manual(values = sc_pink(light = c(1,3,5)))
+p + scale_fill_manual(values = sc_across("RTV", light = 4, sat = "bright"))
+```
+
+```{r, echo = FALSE}
+p <-
+  ggplot(mpg, aes(hwy, fill = drv)) +
+  geom_density(alpha = 0.3)
+
+p1 <- p + scale_fill_manual(values = sc("blue3", "red3", "violet3"))
+p2 <- p + scale_fill_manual(values = sc_pink(light = c(1,3,5)))
+p3 <- p + scale_fill_manual(values = sc_across("RTV", light = 4, sat = "bright"))
+gridExtra::grid.arrange(p1,p2,p3, nrow = 1)
+```
+
+
+# Appendix
+
+## R4DS
+
+R for Data Science is a book all about the `tidyverse`. It is less "data science-y" and more about data manipulation and visualization. It is free online [here](https://r4ds.had.co.nz/) as well as available for sale.
+
+
+## Stackoverflow
+
+- try `datapasta` for a minimal reprex 
+- include images rather than links
+- incorporate `styler`
+
+
+## Cheatsheet
+
+https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf
+
+## Take care when cropping data
+
+The usual methods to "zoom in" can yield unexpected results when stat_ geoms are used. For example, `geom_boxplot()` calls `stat_boxplot()` and filters out data **before** doing the stats and your boxplot will keep readjusting the quartiles
+```{r, echo = FALSE}
+p <- 
+  ggplot(diamonds, aes("", price)) + 
+  geom_boxplot()
+
+p
+
+find_limits <- function(x) {
+  floor(ggplot_build(x)$data[[1]][2:4])
+}
+```
+
+## Use `coord_cartesian()` to zoom in
+
+Do not use `ylim()` or `scale_*_continuous()`
+```{r}
+# find_limits() is a custom function
+bind_rows(
+  find_limits(p),
+  find_limits(p + ylim(0, 12000)),
+  find_limits(p + scale_y_continuous(limits = c(0, 12000))),
+  find_limits(p + coord_cartesian(ylim = c(0, 12000)))
+)
+
+```
+
+# Answers
+
+## Q1
+```{r}
+mpg %>% 
+  mutate(
+    drv = fct_infreq(drv) %>% fct_rev()
+  ) %>% 
+  ggplot(aes(drv)) +
+  geom_bar() + 
+  coord_flip()
+
+```
+
+## Q2
+
+```{r}
+mpg %>% 
+  mutate(
+    cyl_8 = (cyl == 8),
+    manufacturer = fct_reorder(manufacturer, cyl_8, mean)
+  ) %>% 
+  ggplot(aes(manufacturer, fill = cyl_8)) +
+  geom_bar(position = "fill") +
+  coord_flip()
+```
