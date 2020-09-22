@@ -1,12 +1,10 @@
 ---
 title: "Data Visualization in R"
-author: "Jake Riley  Sept. 23, 2020"
+subtitle: "https://bit.ly/2Wt7nkQ"
+author: "Jake Riley  June 19, 2019"
 output: 
   powerpoint_presentation:
-    reference_doc: assets/reference.pptx
-    knit: (function(inputFile, encoding) {
-      rmarkdown::render(inputFile, encoding = encoding, output_dir = "output")
-    })
+    reference_doc: reference.pptx
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +18,7 @@ knitr::opts_chunk$set(
 ```
 
 ## Today's talk
+- https://bit.ly/2Wt7nkQ
 - Intro
 - What is ggplot
 - Tips & Tricks
@@ -30,11 +29,12 @@ knitr::opts_chunk$set(
 
 - Jake Riley
 - Clinical Data Analyst at Children's Hospital of Philadelphia
-- Avid package developer
+- Avid `ggplot2` answerer on stackoverflow
 - dogdad
 
 @yake_84
 
+https://bit.ly/2Wt7nkQ
 
 ## Before we get started
 
@@ -42,7 +42,7 @@ knitr::opts_chunk$set(
 - everything is within the `tidyverse` framework & R for Data Science (R4DS)
 - the pipe `%>%` is used in many places and allows us to create a sequence of manipulations
 
-`iris %>% head()` is the same as `head(iris)`
+`iris %>% arrange(Species)` is the same as `arrange(iris, Species)`
 
 - the `+` used with `ggplot()` is another type of pipe
 
@@ -52,30 +52,6 @@ knitr::opts_chunk$set(
  - grammar of graphics
  - just like every sentence has a **subject, verb, and noun**, every chart has a **coordinate system, geom, and aesthetics**
  - the hope is that we will invent new types of charts
-
-
-```{r}
-econ <- 
-  ggplot(economics, aes(date, unemploy))
-
-econ +
-  geom_line()
-
-econ +
-  geom_point()
-
-econ +
-  geom_area(fill = "lightblue") +
-  geom_point()
-
-econ +
-  geom_area(fill = "lightblue") +
-  geom_point() + 
-  coord_polar()
-
-  
-```
-
  
 ```{r}
 library(tidyverse)
@@ -135,24 +111,27 @@ gridExtra::grid.arrange(
 The number one things I get asked is how to make a barchart go in descending order. 
 
 ```{r}
-ggplot(mpg, aes(y = class)) + 
-  geom_bar()
+ggplot(mpg, aes(class)) + 
+  geom_bar() + 
+  coord_flip()
 ```
 
 ## Arrange by volume: `fct_infreq()`
 ```{r}
 mpg %>%
   mutate(class = fct_infreq(class)) %>% 
-  ggplot(aes(y = class)) + 
-  geom_bar()
+  ggplot(aes(class)) + 
+  geom_bar() + 
+  coord_flip()
 ```
 
 ## Arrange in descending order: `fct_rev()`
 ```{r, }
 mpg %>% 
   mutate(class = fct_infreq(class)) %>% 
-  ggplot(aes(y = fct_rev(class))) + 
-  geom_bar()
+  ggplot(aes(fct_rev(class))) + 
+  geom_bar() + 
+  coord_flip()
 ```
 
 ## Aggregated data: `fct_reorder()`
@@ -167,37 +146,46 @@ mpg %>%
 mpg %>% 
   count(class) %>% 
   mutate(class = fct_reorder(class, n, sum)) %>% 
-  ggplot(aes(n, class)) +
-  geom_col()
+  ggplot(aes(class, n)) +
+  geom_col() + 
+  coord_flip()
 ```
 
+## Q1: can you put this in descending order?
+```{r}
+ggplot(mpg, aes(drv)) +
+  geom_bar() + 
+  coord_flip()
+```
 
 ## Too many bars
 ```{r}
-ggplot(mpg, aes(y = model)) +
-  geom_bar()
+ggplot(mpg, aes(model)) +
+  geom_bar() +
+  coord_flip()
 ```
 
 ## Too many bars: `fct_lump()`
 ```{r}
 mpg %>%
   mutate(
-    manufacturer = 
-      fct_lump(manufacturer, 5) %>% 
-      fct_infreq() %>% 
-      fct_rev()
+    manufacturer = fct_lump(manufacturer, 5),
+    manufacturer = fct_infreq(manufacturer),
+    manufacturer = fct_rev(manufacturer)
   ) %>% 
-  ggplot(aes(y = manufacturer)) +
-  geom_bar()
+  ggplot(aes(x = manufacturer)) +
+  geom_bar() +
+  coord_flip()
 ```
 
-## Sorting by fill
+## Order of fill
 ```{r}
-ggplot(mpg, aes(y = manufacturer, fill = (cyl == 8))) +
-  geom_bar()
+ggplot(mpg, aes(manufacturer, fill = (cyl == 8))) +
+  geom_bar() +
+  coord_flip()
 ```
 
-## Sorting by fill
+## Order of fill
 ```{r}
 mpg %>% 
   mutate(
@@ -209,17 +197,7 @@ mpg %>%
   coord_flip()
 ```
 
-## Sorting by fill (percent)
-```{r}
-mpg %>% 
-  mutate(
-    cyl_8 = (cyl == 8),
-    manufacturer = 
-      fct_reorder(manufacturer, cyl_8, mean)
-  ) %>% 
-  ggplot(aes(y = manufacturer, fill = cyl_8)) +
-  geom_bar(position = "fill")
-```
+# Q2: can you show the manufacturers with the highest proportion<br>*(bonus: can you make it 100% fill?)*
 
 
 ## `facet_grid()` vs `facet_wrap()`
@@ -324,50 +302,6 @@ ggplot(df, aes(cty, fill = category)) +
   scale_fill_identity()
 ```
 
-## Geom defaults
-
-```{r}
-# default behavior
-ggplot(mtcars, aes(mpg, wt)) + 
-  geom_point()
-
-# with updates
-update_geom_defaults(
-  "point", 
-  list(color = "dodgerblue", size = 3)
-)
-
-ggplot(mtcars, aes(mpg, wt)) + 
-  geom_point()
-
-# revert
-update_geom_defaults("point", list(color = "black", size = 2))
-
-ggplot(mtcars, aes(mpg, wt)) + 
-  geom_point()
-```
-
-
-## theme default
-```{r}
-# will apply to all future charts
-theme_set(theme_classic(base_size = 14))
-
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point()
-
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() +
-  theme(panel.grid.major.x = element_line(color = "orange"))
-
-# can revert back using this code
-theme_set(theme_gray())
-
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() 
-
-```
-
 
 # Best practices
 
@@ -429,38 +363,19 @@ ggplot(df, aes(x, y, group = group)) +
   labs(title = "Group B is currently in the lead")
 ```
 
-## Facet the data
-
-```{r}
-ggplot(df, aes(x, y, fill = (group == "B"))) + 
-  geom_area() +
-  facet_grid(cols = vars(group)) +
-  scale_fill_manual(values = c("grey", "navyblue"))
-```
-
-
 ## Try a heatmap but beware
 
 ```{r}
-h <-
-  ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) + 
+ggplot(df, aes(x, fct_reorder(group, y, last), fill = y)) + 
   geom_tile(color = "white") +
   scale_fill_gradient2(
-    low = "red", mid = "yellow", high = "darkgreen", midpoint = 25
+    low = "red", mid = "yellow", high = "darkgreen", midpoint = 12
   ) +
   my_theme +
   labs(title = "An improvement, but not colorblind friendly")
-
-h
 ```
 
-## not colorblind safe
-`remotes::install_github("clauswilke/colorblindr")`
-
-```{r}
-colorblindr::c
-```
-
+[colorblind palette viewer (link)](https://davidmathlogic.com/colorblind/#%2334804B-%236FD46B-%23D5D6D6-%23E5E6E6-%23B53D13)
 
 ## Not every point needs a color
 
