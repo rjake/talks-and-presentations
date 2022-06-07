@@ -230,10 +230,6 @@ compare_values(24, 32) |>
   gt::fmt_markdown(columns = everything()) |> 
   gt::cols_align("right", value) #|> cols_width(everything() ~ px(150))
 
-```{r}
-pixar_films |> 
-  ggplot(aes(release_date, run_time)) +
-  geom_line()
 ```
 ]
 
@@ -315,15 +311,20 @@ decorate(headline_anatomy) |>
 ```
 
 ---
+## In action with `ggtext`
 
+.center[
+  ![cran downloads in facets](figures/cran-pkgs.png)
+]
 
-## Using `headliner` + `ggtext`
+---
+
+## Another example
 
 ### How do recent Pixar films compare to the fist 10 movies?
 .center[
-  ![headlines in facets](figures/pixar-plots.png)
+  ![pixar in facets](figures/pixar-plots.png)
 ]
-
 
 ---
 
