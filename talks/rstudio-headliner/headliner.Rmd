@@ -161,14 +161,25 @@ hl <-
 ## What's a good title for this chart?
 
 .pull-left[
-#### "Callback response times by month"
-* Vague, no insight, no lift
+####  `magrittr` monthly downloads...
+* **...by month**
+  * static, vague, no insight, no lift
 
-#### "Callback response times by month"
-* Vague, no insight, no lift
+* ...changed from **3.4M** to **1.1M**
+  * somewhat dynamic, low insight, light lift
 
-#### "Callback response times by month"
-* Vague, no insight, no lift
+* ...**decreased** by **67%** (**1.1M** vs **3.4M**)
+  * very dynamic, good insight, heavy lift
+]
+
+.pull-right[
+![](figures/cran-magrittr.png)
+]
+
+
+---
+
+
 
 ]
 
