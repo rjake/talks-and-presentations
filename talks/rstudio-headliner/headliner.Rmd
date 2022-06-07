@@ -328,8 +328,11 @@ decorate(headline_anatomy) |>
 
 ---
 
-##
+## How we've used it at CHOP
 
+.center[
+ ![](figures/...)
+]
 ```{r}
 
 ```
