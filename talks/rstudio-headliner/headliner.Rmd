@@ -240,6 +240,30 @@ pixar_films |>
 
 ---
 
+## Using `glue()` under the hood
+
+.pull-left[
+```{r eval=TRUE}
+my_age <- 37
+
+glue("I am {my_age}")
+
+
+headline(
+  x = 88, 
+  y = 70,
+  "There was {article_delta}pt {trend} ({orig_values})"
+)
+```
+]
+
+.pull-right[
+```{r eval=TRUE}
+compare_values(24, 32) |> 
+  view_list() 
+```
+]
+---
 
 ##
 
