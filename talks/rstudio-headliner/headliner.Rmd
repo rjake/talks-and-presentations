@@ -53,11 +53,11 @@ xaringanthemer::style_mono_light(
   
   table_row_even_background_color = "transparent",
   
-  code_font_size = "0.7em",
+  code_font_size = "1.3em",
   code_highlight_color = sc("grey3"),
   
   code_inline_color = "black",
-  code_inline_font_size = "0.7em",
+  code_inline_font_size = "1.3em",
   code_inline_background_color = sc("grey3"),
   
   header_background_padding = "0px",
