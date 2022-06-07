@@ -164,8 +164,8 @@ pkg_labels |>
   #filter(str_detect(keep, "decr")) |> 
   ggplot(aes(month, n, color = package)) +
   facet_wrap(~facet, nrow = 1) +
-  geom_line() +
-  geom_point() +
+  geom_line( ) + geom_point() +
+  #geom_line(color = sc("mutedblue4")) + geom_point(color = sc("mutedblue4")) +
   scale_y_continuous(
     labels = number_format(scale_cut = cut_short_scale()),
     expand = expansion(c(0, 0.02)),
