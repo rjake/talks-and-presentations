@@ -136,25 +136,24 @@ hl <-
 
 ---
 
-## Building insightful dashboards isn't easy
+## Building an insightful dashboard is not easy
 
-.left-column[
- #### Facts
+.pull-left[
+ ### Facts
  
  * Easy out of the box
  * Risk of low adoption
 
 
- #### Insights
+ ### Insights
  
  * More meaningful
  * Risk of high technical debt
 ]
 
-.right-column[
-```{r, echo=FALSE, eval=TRUE, fig.height=400}
-knitr::include_graphics("figures/insights.png")
-```
+.pull-right[
+
+<img src="figures/insights.png" height="500px" style="position:absolute;right:100px;top:130px;">
 ]
 
 ---
