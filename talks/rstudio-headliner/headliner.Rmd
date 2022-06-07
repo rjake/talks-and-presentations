@@ -179,7 +179,30 @@ hl <-
 
 ---
 
+## Enter `headliner`
 
+.pull-left[
+
+.center[<img src="figures/logo.png" height="180px">]
+
+* `headliner` is an R packaged focused on informative titles
+
+
+* Given two values, `headliner` gives metadata about the difference
+
+```{r eval=TRUE, echo=FALSE}
+decorate(as_glue(
+"
+headline(32, 24)
+#> increase of 8 (32 vs. 24)
+
+
+headline(24, 32)
+#> decrease of 8 (24 vs. 32)
+"
+)) |> 
+  flair_rx("..crease")
+```
 
 ]
 
