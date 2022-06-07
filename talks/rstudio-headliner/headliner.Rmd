@@ -27,7 +27,6 @@ knit:
   vertical-align: bottom !important;
   text-align: left !important;
   background-image: url(figures/logo-dark.png);
-  background-position: right;
   background-size: 440px;
 }
 
