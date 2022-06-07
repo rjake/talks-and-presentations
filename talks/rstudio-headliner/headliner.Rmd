@@ -82,6 +82,7 @@ library(headliner)
 library(simplecolors)
 library(flair)
 library(glue)
+library(gt)
 
 
 registerS3method(
@@ -173,6 +174,28 @@ knitr::include_graphics("figures/insights.png")
 ]
 
 .pull-right[
+```{r, echo=FALSE, eval=TRUE}
+compare_values(24, 32) |> 
+  view_list() |> 
+  rownames_to_column() |>
+  select(value = value, name = rowname) |> 
+  mutate(name = paste0("{", name, "}")) |> 
+  gt::gt() |> 
+  gt::tab_options(column_labels.hidden = TRUE) |> 
+  gt::tab_style(
+    style = "padding-right:15px;padding-left:15px;padding-bottom:5px;padding-top:5px;font-size:12pt;",
+    locations = cells_body()
+  ) |> 
+  gt::tab_style(
+    style = cell_text(font = google_font(name = "Space Mono")),
+    locations = cells_body(name)
+  ) |> 
+  gt::tab_header(
+    title = md("**Talking Points**"),
+    subtitle = md("`compare_values(24, 32) |> view_list()`")
+  ) |> 
+  gt::fmt_markdown(columns = everything()) |> 
+  gt::cols_align("right", value) #|> cols_width(everything() ~ px(150))
 
 ```{r}
 pixar_films |> 
