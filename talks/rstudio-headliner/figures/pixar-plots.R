@@ -1,8 +1,9 @@
 library(headliner)
 library(simplecolors)
 library(tidyverse)
+library(lubridate)
 library(glue)
-library(ggtext)
+library(ggtext) # if bold doesn't work, need to install dev version of gridtext
 library(scales)
 
 setwd(dirname(.rs.api.getSourceEditorContext()$path))
@@ -146,14 +147,14 @@ pkg_labels <-
   select(-starts_with("mean_")) |> 
   mutate(
     facet = paste0(
-      "<b>", keep, "</b><br>",
+       keep, "<br>",
       map_chr(
         headline,
-        ~str_replace(.x, "ggplot2", text_color(("ggplot2"), sc("mutedteal4"))) |> 
-          str_replace("magrittr", text_color(("magrittr"), sc("mutedpink4"))) |> 
-          str_replace("xml2", text_color(("xml2"), sc("grey4")))
+        ~str_replace(.x, "ggplot2", text_color("**ggplot2**", sc("mutedteal4"))) |> 
+          str_replace("magrittr", text_color("**magrittr**", sc("mutedpink4"))) |> 
+          str_replace("xml2", text_color("**xml2**", sc("grey4")))
       ) |>
-      font_size("10")
+        font_size("10")
     )
   ) |> 
   left_join(pkg_month)
@@ -172,11 +173,16 @@ pkg_labels |>
   ) +
   scale_x_date(date_labels = "%m/%y", expand = expansion(c(0.1, 0.025))) +
   scale_color_manual(values = sc("mutedteal3", "mutedpink3", "grey3")) +
+  labs(
+    title = "Changes in overall monthly downloads **2021** vs **2020**",
+    x = NULL, y = NULL
+  ) +
   theme(
     panel.grid = element_blank(),
     panel.background = element_rect("white", "grey80"),
     legend.position = "none",
     strip.background = element_rect("white"),
-    strip.text = ggtext::element_markdown(size = 12, hjust = 0, vjust = 1)
-  ) +
-  labs(x = NULL, y = NULL)
+    strip.text = ggtext::element_textbox(size = 12, hjust = 0, vjust = 1),
+    plot.title.position = "plot",
+    plot.title = ggtext::element_textbox_simple()
+  )
