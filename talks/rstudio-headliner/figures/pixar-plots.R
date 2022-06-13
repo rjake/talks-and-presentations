@@ -87,14 +87,17 @@ headlines |>
   ggplot() +
   facet_wrap(~facet, scales = "free_x", nrow = 2) +
   geom_col(aes(x = first_10, y = "First 10", fill = sc("grey2"))) +
-  geom_col(aes(x = later, y = "Later", fill = color)) +
+  geom_col(aes(x = later, y = "Recent", fill = color)) +
   scale_fill_identity() +
   theme(
+    plot.title.position = "plot",
     panel.background = element_rect("white", "grey80"),
     strip.background = element_rect("white"),
-    strip.text = ggtext::element_textbox(size = 12, hjust = 0, vjust = 1)
+    strip.text = ggtext::element_textbox(size = 12, hjust = 0, vjust = 1),
+    plot.title = ggtext::element_textbox_simple()
   ) +
   labs(
+    title = "How do recent Pixar films compare with the first 10 movies?",
     x = NULL, y = NULL
   )
 

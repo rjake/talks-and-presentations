@@ -36,8 +36,8 @@
   --code-font-is-google: 1;
   --base-font-size: 20px;
   --text-font-size: 1rem;
-  --code-font-size: 1.3em;
-  --code-inline-font-size: 1.3em;
+  --code-font-size: 0.9rem;
+  --code-inline-font-size: 1em;
   --header-h1-font-size: 2.75rem;
   --header-h2-font-size: 2.25rem;
   --header-h3-font-size: 1.75rem;
@@ -48,7 +48,7 @@
   --background-color: #E9EBEE;
   --link-color: #23395b;
   --text-bold-color: #23395b;
-  --code-highlight-color: #949494;
+  --code-highlight-color: #C7C7C7;
   --inverse-text-color: #E9EBEE;
   --inverse-background-color: #23395b;
   --inverse-header-color: #E9EBEE;
@@ -101,7 +101,7 @@ h1, h2, h3 {
 .remark-inline-code {
   font-size: var(--code-inline-font-size);
   color: black;
-  background-color: #949494;
+  background-color: #C7C7C7;
   padding: 2px;
 }
 .remark-slide-number {

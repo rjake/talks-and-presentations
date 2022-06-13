@@ -4,7 +4,7 @@
     <title>headliner</title>
     <meta charset="utf-8" />
     <meta name="author" content="Jake Riley 6/14/22" />
-    <script src="headliner_files/header-attrs/header-attrs.js"></script>
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -42,8 +42,9 @@ class: center, middle, inverse, title-slide
 
 .large { font-size: 130% }
 .small { font-size: 70% }
-&lt;/style&gt;
 
+.small .remark-code { font-size: 90%}
+&lt;/style&gt;
 
 
 
@@ -81,6 +82,7 @@ class: center, middle, inverse, title-slide
 
 ---
 
+
 ## Building an insightful dashboard is not easy
 
 .pull-left[
@@ -106,7 +108,7 @@ class: center, middle, inverse, title-slide
 ## What's a good title for this chart?
 
 .pull-left[
-####  `magrittr` monthly downloads...
+#### Monthly downloads...
 * **...by month**
   * static, vague, no insight, no lift
 
@@ -127,27 +129,47 @@ class: center, middle, inverse, title-slide
 ## Enter `headliner`
 
 .pull-left[
+&lt;!-- .center[] --&gt;
 
-.center[&lt;img src="figures/logo.png" height="180px"&gt;]
-
-* `headliner` is an R packaged focused on informative titles
+* `headliner` is an R packaged focused on informative titles &lt;br&gt;
+&lt;img src="figures/logo.png" height="120px"&gt;
 
 
 * Given two values, `headliner` gives metadata about the difference
 
 
-&lt;code class ='r hljs remark-code'&gt;headline(32, 24)&lt;br&gt;#&gt; &lt;span style='background-color:#ffff7f'&gt;increase&lt;/span&gt; of 8 (32 vs. 24)&lt;br&gt;&lt;br&gt;&lt;br&gt;headline(24, 32)&lt;br&gt;#&gt; &lt;span style='background-color:#ffff7f'&gt;decrease&lt;/span&gt; of 8 (24 vs. 32)&lt;/code&gt;
+&lt;code class ='r hljs remark-code'&gt;headline(32, 24)&lt;/code&gt;
+
+```
+
+increase of 8 (32 vs. 24)
+
+```
+
+
+
+&lt;code class ='r hljs remark-code'&gt;#&gt; &lt;span style='background-color:#ffff7f'&gt;increase&lt;/span&gt; of 8 (32 vs. 24)&lt;br&gt;&lt;br&gt;&lt;br&gt;headline(24, 32)&lt;/code&gt;
+
+```
+
+decrease of 8 (24 vs. 32)
+
+```
+
+
+
+&lt;code class ='r hljs remark-code'&gt;#&gt; &lt;span style='background-color:#ffff7f'&gt;decrease&lt;/span&gt; of 8 (24 vs. 32)&lt;/code&gt;
 
 ]
 
 .pull-right[
-<div id="fqlaoyqcvk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lumsvshplj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#fqlaoyqcvk .gt_table {
+#lumsvshplj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -172,7 +194,7 @@ html {
   border-left-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_heading {
+#lumsvshplj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -184,7 +206,7 @@ html {
   border-right-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_title {
+#lumsvshplj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -196,7 +218,7 @@ html {
   border-bottom-width: 0;
 }
 
-#fqlaoyqcvk .gt_subtitle {
+#lumsvshplj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -208,13 +230,13 @@ html {
   border-top-width: 0;
 }
 
-#fqlaoyqcvk .gt_bottom_border {
+#lumsvshplj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_col_headings {
+#lumsvshplj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -229,7 +251,7 @@ html {
   border-right-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_col_heading {
+#lumsvshplj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -249,7 +271,7 @@ html {
   overflow-x: hidden;
 }
 
-#fqlaoyqcvk .gt_column_spanner_outer {
+#lumsvshplj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -261,15 +283,15 @@ html {
   padding-right: 4px;
 }
 
-#fqlaoyqcvk .gt_column_spanner_outer:first-child {
+#lumsvshplj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fqlaoyqcvk .gt_column_spanner_outer:last-child {
+#lumsvshplj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fqlaoyqcvk .gt_column_spanner {
+#lumsvshplj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -281,7 +303,7 @@ html {
   width: 100%;
 }
 
-#fqlaoyqcvk .gt_group_heading {
+#lumsvshplj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -306,7 +328,7 @@ html {
   vertical-align: middle;
 }
 
-#fqlaoyqcvk .gt_empty_group_heading {
+#lumsvshplj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -321,15 +343,15 @@ html {
   vertical-align: middle;
 }
 
-#fqlaoyqcvk .gt_from_md > :first-child {
+#lumsvshplj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fqlaoyqcvk .gt_from_md > :last-child {
+#lumsvshplj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fqlaoyqcvk .gt_row {
+#lumsvshplj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -348,7 +370,7 @@ html {
   overflow-x: hidden;
 }
 
-#fqlaoyqcvk .gt_stub {
+#lumsvshplj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -361,7 +383,7 @@ html {
   padding-right: 5px;
 }
 
-#fqlaoyqcvk .gt_stub_row_group {
+#lumsvshplj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -375,11 +397,11 @@ html {
   vertical-align: top;
 }
 
-#fqlaoyqcvk .gt_row_group_first td {
+#lumsvshplj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fqlaoyqcvk .gt_summary_row {
+#lumsvshplj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -389,16 +411,16 @@ html {
   padding-right: 5px;
 }
 
-#fqlaoyqcvk .gt_first_summary_row {
+#lumsvshplj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_first_summary_row.thick {
+#lumsvshplj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fqlaoyqcvk .gt_last_summary_row {
+#lumsvshplj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -408,7 +430,7 @@ html {
   border-bottom-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_grand_summary_row {
+#lumsvshplj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -418,7 +440,7 @@ html {
   padding-right: 5px;
 }
 
-#fqlaoyqcvk .gt_first_grand_summary_row {
+#lumsvshplj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -428,11 +450,11 @@ html {
   border-top-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_striped {
+#lumsvshplj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fqlaoyqcvk .gt_table_body {
+#lumsvshplj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -441,7 +463,7 @@ html {
   border-bottom-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_footnotes {
+#lumsvshplj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -455,7 +477,7 @@ html {
   border-right-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_footnote {
+#lumsvshplj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -464,7 +486,7 @@ html {
   padding-right: 5px;
 }
 
-#fqlaoyqcvk .gt_sourcenotes {
+#lumsvshplj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -478,7 +500,7 @@ html {
   border-right-color: #D3D3D3;
 }
 
-#fqlaoyqcvk .gt_sourcenote {
+#lumsvshplj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -486,36 +508,36 @@ html {
   padding-right: 5px;
 }
 
-#fqlaoyqcvk .gt_left {
+#lumsvshplj .gt_left {
   text-align: left;
 }
 
-#fqlaoyqcvk .gt_center {
+#lumsvshplj .gt_center {
   text-align: center;
 }
 
-#fqlaoyqcvk .gt_right {
+#lumsvshplj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fqlaoyqcvk .gt_font_normal {
+#lumsvshplj .gt_font_normal {
   font-weight: normal;
 }
 
-#fqlaoyqcvk .gt_font_bold {
+#lumsvshplj .gt_font_bold {
   font-weight: bold;
 }
 
-#fqlaoyqcvk .gt_font_italic {
+#lumsvshplj .gt_font_italic {
   font-style: italic;
 }
 
-#fqlaoyqcvk .gt_super {
+#lumsvshplj .gt_super {
   font-size: 65%;
 }
 
-#fqlaoyqcvk .gt_two_val_uncert {
+#lumsvshplj .gt_two_val_uncert {
   display: inline-block;
   line-height: 1em;
   text-align: right;
@@ -524,31 +546,31 @@ html {
   margin-left: 0.1em;
 }
 
-#fqlaoyqcvk .gt_footnote_marks {
+#lumsvshplj .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#fqlaoyqcvk .gt_asterisk {
+#lumsvshplj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fqlaoyqcvk .gt_slash_mark {
+#lumsvshplj .gt_slash_mark {
   font-size: 0.7em;
   line-height: 0.7em;
   vertical-align: 0.15em;
 }
 
-#fqlaoyqcvk .gt_fraction_numerator {
+#lumsvshplj .gt_fraction_numerator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: 0.45em;
 }
 
-#fqlaoyqcvk .gt_fraction_denominator {
+#lumsvshplj .gt_fraction_denominator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: -0.05em;
@@ -565,57 +587,57 @@ html {
   </thead>
   
   <tbody class="gt_table_body">
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>24</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>24</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{x}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{x}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>32</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>32</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{y}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{y}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>8</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>8</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{delta}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{delta}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>25</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>25</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{delta_p}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{delta_p}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>an 8</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>an 8</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_delta}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_delta}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>a 25</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>a 25</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_delta_p}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_delta_p}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>-8</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>-8</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{raw_delta}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{raw_delta}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>-25</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>-25</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{raw_delta_p}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{raw_delta_p}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>a -8</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>a -8</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_raw_delta}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_raw_delta}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>a -25</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>a -25</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_raw_delta_p}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{article_raw_delta_p}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>-1</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>-1</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{sign}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{sign}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>24 vs. 32</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>24 vs. 32</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{orig_values}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{orig_values}</p>
 </div></td></tr>
-    <tr><td class="gt_row gt_right" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt;"><div class='gt_from_md'><p>decrease</p>
+    <tr><td class="gt_row gt_right" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px;"><div class='gt_from_md'><p>decrease</p>
 </div></td>
-<td class="gt_row gt_left" style="padding-right: 15px;padding-left: 15px;padding-bottom: 5px;padding-top: 5px;font-size: 12pt; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{trend}</p>
+<td class="gt_row gt_left" style="padding-right: 15px; padding-bottom: 5px;          padding-left:  15px; padding-top:    5px; font-family: &#39;Space Mono&#39;;"><div class='gt_from_md'><p>{trend}</p>
 </div></td></tr>
   </tbody>
   
@@ -638,19 +660,19 @@ glue("I am {my_age}")
 ```
 
 ```
-## I am 37
+I am 37
 ```
 
 ```r
 headline(
-  x = 88, 
-  y = 70,
-  "There was {article_delta}pt {trend} ({orig_values})"
+  x = 24, 
+  y = 32,
+  "{article_delta}pt {trend} ({orig_values})"
 )
 ```
 
 ```
-## There was an 18pt increase (88 vs. 70)
+an 8pt decrease (24 vs. 32)
 ```
 ]
 
@@ -662,38 +684,46 @@ compare_values(24, 32) |&gt;
 ```
 
 ```
-##                         value
-## x                          24
-## y                          32
-## delta                       8
-## delta_p                    25
-## article_delta            an 8
-## article_delta_p          a 25
-## raw_delta                  -8
-## raw_delta_p               -25
-## article_raw_delta        a -8
-## article_raw_delta_p     a -25
-## sign                       -1
-## orig_values         24 vs. 32
-## trend                decrease
+                        value
+x                          24
+y                          32
+delta                       8
+delta_p                    25
+article_delta            an 8
+article_delta_p          a 25
+raw_delta                  -8
+raw_delta_p               -25
+article_raw_delta        a -8
+article_raw_delta_p     a -25
+sign                       -1
+orig_values         24 vs. 32
+trend                decrease
 ```
 ]
+
 ---
 
 ##
 
 
+```
+There was a 33.3% decrease (8 vs 12)
+There was an 18.2% decrease (9 vs 11)
+There was no difference
+There was a 22.2% increase (11 vs 9)
+There was a 50% increase (12 vs 8)
+```
 
 
-&lt;code class ='r hljs remark-code'&gt;headline(&lt;br&gt;&amp;nbsp;&amp;nbsp;x = 8:12,&lt;br&gt;&amp;nbsp;&amp;nbsp;y = 12:8,&lt;br&gt;&amp;nbsp;&amp;nbsp;headline = "there was &lt;span style='background-color:#ffff7f'&gt;{article_delta_p}&lt;/span&gt;% &lt;span style='background-color:#ffff7f'&gt;{trend}&lt;/span&gt;"&lt;br&gt;)&lt;/code&gt;
+&lt;code class ='r hljs remark-code'&gt;headline(&lt;br&gt;&amp;nbsp;&amp;nbsp;x = 8:12,&lt;br&gt;&amp;nbsp;&amp;nbsp;y = 12:8,&lt;br&gt;&amp;nbsp;&amp;nbsp;headline = &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"There was &lt;span style='background-color:#ffff7f'&gt;{article_delta_p}&lt;/span&gt;% &lt;span style='background-color:#ffff7f'&gt;{trend}&lt;/span&gt; (&lt;span style='background-color:#ffff7f'&gt;{x}&lt;/span&gt; vs &lt;span style='background-color:#ffff7f'&gt;{y}&lt;/span&gt;)"&lt;br&gt;)&lt;/code&gt;
 
 ```
 
-## there was a 33.3% decrease
-## there was an 18.2% decrease
-## There was no difference
-## there was a 22.2% increase
-## there was a 50% increase
+There was a 33.3% decrease (8 vs 12)
+There was an 18.2% decrease (9 vs 11)
+There was no difference
+There was a 22.2% increase (11 vs 9)
+There was a 50% increase (12 vs 8)
 
 ```
 
@@ -708,22 +738,52 @@ compare_values(24, 32) |&gt;
 print(headline_anatomy)
 ```
 
-
-```r
-decorate(headline_anatomy) |&gt; 
-  flair_rx("x = .*")
+```
+headline(
+  x = 8:12,
+  y = 12:8,
+  headline = 
+    "There was {article_delta_p}% {trend} ({orig_values})"
+)
 ```
 
 
-```r
-decorate(headline_anatomy) |&gt; 
-  flair_rx("y = .*")
+&lt;code class ='r hljs remark-code'&gt;headline(&lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;x = 8:12,&lt;/span&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;y = 12:8,&lt;br&gt;&amp;nbsp;&amp;nbsp;headline = &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"There was {article_delta_p}% {trend} ({orig_values})"&lt;br&gt;)&lt;/code&gt;
+
+```
+
+There was a 33.3% decrease (8 vs. 12)
+There was an 18.2% decrease (9 vs. 11)
+There was no difference
+There was a 22.2% increase (11 vs. 9)
+There was a 50% increase (12 vs. 8)
+
 ```
 
 
-```r
-decorate(headline_anatomy) |&gt; 
-  flair_rx("headline = .*")
+&lt;code class ='r hljs remark-code'&gt;headline(&lt;br&gt;&amp;nbsp;&amp;nbsp;x = 8:12,&lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;y = 12:8,&lt;/span&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;headline = &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"There was {article_delta_p}% {trend} ({orig_values})"&lt;br&gt;)&lt;/code&gt;
+
+```
+
+There was a 33.3% decrease (8 vs. 12)
+There was an 18.2% decrease (9 vs. 11)
+There was no difference
+There was a 22.2% increase (11 vs. 9)
+There was a 50% increase (12 vs. 8)
+
+```
+
+
+&lt;code class ='r hljs remark-code'&gt;headline(&lt;br&gt;&amp;nbsp;&amp;nbsp;x = 8:12,&lt;br&gt;&amp;nbsp;&amp;nbsp;y = 12:8,&lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;headline = &lt;/span&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"There was {article_delta_p}% {trend} ({orig_values})"&lt;br&gt;)&lt;/code&gt;
+
+```
+
+There was a 33.3% decrease (8 vs. 12)
+There was an 18.2% decrease (9 vs. 11)
+There was no difference
+There was a 22.2% increase (11 vs. 9)
+There was a 50% increase (12 vs. 8)
+
 ```
 
 ---
@@ -737,9 +797,9 @@ decorate(headline_anatomy) |&gt;
 
 ## Another example
 
-### How do recent Pixar films compare to the fist 10 movies?
 .center[
-  ![pixar in facets](figures/pixar-plots.png)
+  &lt;img src="figures/pixar-plots.png"&gt;
+
 ]
 
 ---
@@ -747,10 +807,62 @@ decorate(headline_anatomy) |&gt;
 ## How we've used it at CHOP
 
 .center[
- ![](figures/...)
+ &lt;img src="figures/exec-report-story-points.png" width="75%" height="75%"&gt;
 ]
 
+---
 
+## How we've used it at CHOP
+
+.center[
+ &lt;img src="figures/exec-report-inpatient-detail.png"&gt;
+]
+
+---
+
+##
+.pull-left[
+.small[
+
+```r
+# return just the name of the look back month
+month_lookback &lt;- function(n) {
+  floor_date(
+    x = Sys.Date() - months(n),
+    unit = "month"
+  ) |&gt;
+    month(
+      label = TRUE,
+      abbr = FALSE
+    )
+}
+
+
+make_adc_headlines &lt;- function() {
+  headline( # last month ADC vs 2 months ago ADC
+    x = adc(1), 
+    y = adc(2),
+    headline = 
+      "The average midnight daily census for {month_lookback(1)} was 
+      {blue(x)}, a {delta}-point {trend} 
+      since {month_lookback(2)}'s end-of-month ADC of {y}. "
+  ) +
+    headline( # last month ADC vs last month Budget
+      x = adc(1), 
+      y = budget(1),
+      headline = 
+        "This is {blue(delta)} ({round(delta_p)}%) {trend} 
+        the budgeted {month_lookback(1)} ADC of {y}.",
+      trend_phrases = trend_terms("above", "below")
+    )
+}
+```
+]
+]
+
+.pull-right[
+The average midnight daily census for **May** was **___**, a **14**-point **increase** since **April**’s end-of-month ADC of **___**. This is **___** (**8**%) **above** the budgeted **May** ADC of **___**.
+]
 ---
 
 ##
@@ -795,17 +907,24 @@ decorate(headline_anatomy) |&gt;
 
 ---
 
-##
+## exit
+
+```r
+knitr::knit_exit()
+```
 
 
 
----
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "ratio": "16:9",
-"countIncrementalSlides": true
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
@@ -884,7 +1003,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
       links[i].target = '_blank';
     }
   }
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 slideshow._releaseMath = function(el) {

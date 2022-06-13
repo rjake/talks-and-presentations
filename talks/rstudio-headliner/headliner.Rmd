@@ -8,13 +8,13 @@ output:
   # github_document: default # comment this out for moon-reader to work
   xaringan::moon_reader:
     css: xaringan-themer.css
-    # lib_dir: libs
+    # css: [default, hygge, ninjutsu]
+    lib_dir: libs
     nature:
-      #highlightStyle: github
-      #highlightLines: true
-      #highlightSpans: true
       ratio: 16:9
-      countIncrementalSlides: true
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 knit:
   (function(inputFile, encoding) {
     rmarkdown::render(inputFile, encoding = encoding, output_dir = ".", output_format = "all")
@@ -40,6 +40,8 @@ knit:
 
 .large { font-size: 130% }
 .small { font-size: 70% }
+
+.small .remark-code { font-size: 90%}
 ```
 
 
@@ -52,12 +54,12 @@ xaringanthemer::style_mono_light(
   
   table_row_even_background_color = "transparent",
   
-  code_font_size = "1.3em",
-  code_highlight_color = sc("grey3"),
+  #code_font_size = "1.3em",
+  code_highlight_color = sc("grey2"),
   
   code_inline_color = "black",
-  code_inline_font_size = "1.3em",
-  code_inline_background_color = sc("grey3"),
+  #code_inline_font_size = "1.3em",
+  code_inline_background_color = sc("grey2"),
   
   header_background_padding = "0px",
   header_background_content_padding_top = "0px",
@@ -71,10 +73,10 @@ xaringanthemer::style_mono_light(
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width = 9, fig.height = 3.5, fig.retina = 3,
+  comment = "",
   message = FALSE,
   warning = FALSE,
-  hiline = TRUE,
-  eval = FALSE
+  hiline = TRUE
 )
 
 library(tidyverse)
@@ -83,6 +85,7 @@ library(simplecolors)
 library(flair)
 library(glue)
 library(gt)
+library(flipbookr)
 
 
 registerS3method(
@@ -103,8 +106,17 @@ hl <-
   as.list() |> 
   append(c(grey3 = sc("grey3")))
 
-```
 
+gt_custom <- function(df) {
+  gt(df) |>
+    tab_style(
+      style = 
+        "padding-right:15px; padding-bottom:5px;
+         padding-left: 15px; padding-top:   5px;",
+      locations = cells_body()
+    )
+}
+```
 
 ## About Me
 
@@ -136,6 +148,7 @@ hl <-
 
 ---
 
+
 ## Building an insightful dashboard is not easy
 
 .pull-left[
@@ -161,7 +174,7 @@ hl <-
 ## What's a good title for this chart?
 
 .pull-left[
-####  `magrittr` monthly downloads...
+#### Monthly downloads...
 * **...by month**
   * static, vague, no insight, no lift
 
@@ -182,10 +195,10 @@ hl <-
 ## Enter `headliner`
 
 .pull-left[
+<!-- .center[] -->
 
-.center[<img src="figures/logo.png" height="180px">]
-
-* `headliner` is an R packaged focused on informative titles
+* `headliner` is an R packaged focused on informative titles <br>
+<img src="figures/logo.png" height="120px">
 
 
 * Given two values, `headliner` gives metadata about the difference
@@ -213,22 +226,18 @@ compare_values(24, 32) |>
   rownames_to_column() |>
   select(value = value, name = rowname) |> 
   mutate(name = paste0("{", name, "}")) |> 
-  gt::gt() |> 
-  gt::tab_options(column_labels.hidden = TRUE) |> 
-  gt::tab_style(
-    style = "padding-right:15px;padding-left:15px;padding-bottom:5px;padding-top:5px;font-size:12pt;",
-    locations = cells_body()
-  ) |> 
-  gt::tab_style(
+  gt_custom() |> 
+  tab_options(column_labels.hidden = TRUE) |> 
+  tab_style(
     style = cell_text(font = google_font(name = "Space Mono")),
     locations = cells_body(name)
   ) |> 
-  gt::tab_header(
+  tab_header(
     title = md("**Talking Points**"),
     subtitle = md("`compare_values(24, 32) |> view_list()`")
   ) |> 
-  gt::fmt_markdown(columns = everything()) |> 
-  gt::cols_align("right", value) #|> cols_width(everything() ~ px(150))
+  fmt_markdown(columns = everything()) |> 
+  cols_align("right", value) #|> cols_width(everything() ~ px(150))
 
 ```
 ]
@@ -244,11 +253,10 @@ my_age <- 37
 
 glue("I am {my_age}")
 
-
 headline(
-  x = 88, 
-  y = 70,
-  "There was {article_delta}pt {trend} ({orig_values})"
+  x = 24, 
+  y = 32,
+  "{article_delta}pt {trend} ({orig_values})"
 )
 ```
 ]
@@ -259,6 +267,7 @@ compare_values(24, 32) |>
   view_list() 
 ```
 ]
+
 ---
 
 ##
@@ -267,7 +276,8 @@ compare_values(24, 32) |>
 headline(
   x = 8:12,
   y = 12:8,
-  headline = "there was {article_delta_p}% {trend}"
+  headline = 
+    "There was {article_delta_p}% {trend} ({x} vs {y})"
 )
 ```
 
@@ -286,7 +296,8 @@ headline_anatomy <- as_glue(
 'headline(
   x = 8:12,
   y = 12:8,
-  headline = "there was {article_delta_p}% {trend}"
+  headline = 
+    "There was {article_delta_p}% {trend} ({orig_values})"
 )'
 )
 ```
@@ -295,17 +306,13 @@ headline_anatomy <- as_glue(
 print(headline_anatomy)
 ```
 
-```{r}
+```{r echo=FALSE, eval=TRUE}
 decorate(headline_anatomy) |> 
   flair_rx("x = .*")
-```
 
-```{r}
 decorate(headline_anatomy) |> 
   flair_rx("y = .*")
-```
 
-```{r}
 decorate(headline_anatomy) |> 
   flair_rx("headline = .*")
 ```
@@ -321,9 +328,9 @@ decorate(headline_anatomy) |>
 
 ## Another example
 
-### How do recent Pixar films compare to the fist 10 movies?
 .center[
-  ![pixar in facets](figures/pixar-plots.png)
+  <img src="figures/pixar-plots.png">
+
 ]
 
 ---
@@ -331,12 +338,62 @@ decorate(headline_anatomy) |>
 ## How we've used it at CHOP
 
 .center[
- ![](figures/...)
+ <img src="figures/exec-report-story-points.png" width="75%" height="75%">
 ]
-```{r}
+
+---
+
+## How we've used it at CHOP
+
+.center[
+ <img src="figures/exec-report-inpatient-detail.png">
+]
+
+---
+
+##
+.pull-left[
+.small[
+```{r eval=FALSE}
+# return just the name of the look back month
+month_lookback <- function(n) {
+  floor_date(
+    x = Sys.Date() - months(n),
+    unit = "month"
+  ) |>
+    month(
+      label = TRUE,
+      abbr = FALSE
+    )
+}
+
+
+make_adc_headlines <- function() {
+  headline( # last month ADC vs 2 months ago ADC
+    x = adc(1), 
+    y = adc(2),
+    headline = 
+      "The average midnight daily census for {month_lookback(1)} was 
+      {blue(x)}, a {delta}-point {trend} 
+      since {month_lookback(2)}'s end-of-month ADC of {y}. "
+  ) +
+    headline( # last month ADC vs last month Budget
+      x = adc(1), 
+      y = budget(1),
+      headline = 
+        "This is {blue(delta)} ({round(delta_p)}%) {trend} 
+        the budgeted {month_lookback(1)} ADC of {y}.",
+      trend_phrases = trend_terms("above", "below")
+    )
+}
 
 ```
+]
+]
 
+.pull-right[
+The average midnight daily census for **May** was **___**, a **14**-point **increase** since **April**’s end-of-month ADC of **___**. This is **___** (**8**%) **above** the budgeted **May** ADC of **___**.
+]
 ---
 
 ##
@@ -395,10 +452,47 @@ decorate(headline_anatomy) |>
 
 ---
 
-##
-
-```{r}
-
+## exit
+```{r exit, eval=TRUE}
+knitr::knit_exit()
 ```
 
+---
+
+`r chunk_reveal("my_cars", title = "## flipbookr")`
+
+```{r my_cars,  eval = F, echo = F}
+ cars %>%
+   filter(speed > 4) %>%
+   ggplot() +
+   aes(x = speed) + #BREAK
+   aes(y = dist) + #BREAK
+   geom_point(
+     alpha = .8, 
+     color = "blue" 
+     ) + 
+   aes(size = speed) #BREAK
+```
+
+---
+
+
+`r chunk_reveal("my_fill", break_type = "rotate", widths = c(1,1), title = "### cycle through lines w/ #ROTATE")`
+
+```{r my_fill, eval = F, echo = F}
+ggplot(data = cars) +
+  aes(x = speed) +
+  aes(y = dist) +
+  geom_point(
+    size = 8,
+    shape = 21,
+    alpha = .9,
+    color = "snow"
+  ) +
+  aes(fill = speed) +
+  scale_fill_viridis_c(option = "magma") + # ROTATE
+  scale_fill_viridis_c(option = "cividis") + # ROTATE
+  scale_fill_viridis_c(option = "plasma") # ROTATE
+```
+ 
 ---
