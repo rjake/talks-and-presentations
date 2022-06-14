@@ -52,8 +52,8 @@ class: bottom
 
 ### Jake Riley - 6/14/22
 
-[slides](https://github.com/pages/rjake/talks-and-presentations/.../README.html) 
-| [code](https://github.com/rjake/talks-and-presentations/.../README.md)
+[slides](https://rjake.github.io/talks-and-presentations/talks/rstudio-headliner/headliner.html#1) 
+| [code](https://github.com/rjake/talks-and-presentations/blob/master/talks/rstudio-headliner/headliner.Rmd)
 
 ]
 ]
