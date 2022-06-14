@@ -189,3 +189,38 @@ pkg_labels |>
     plot.title.position = "plot",
     plot.title = ggtext::element_textbox_simple()
   )
+
+# magrittr only ----
+pkg_labels |> 
+  filter(str_detect(package, "ggpl")) |> 
+  select(-(headline:facet)) |> 
+  group_by(year) |> 
+  mutate(mean = mean(n)) |> 
+  ungroup() |> 
+  ggplot(aes(month, n, color = factor(year))) +
+  geom_line(
+    aes(y = mean, group = year), 
+    linetype = "dashed"
+  ) +
+  geom_line() + 
+  geom_point() +
+  scale_y_continuous(
+    labels = number_format(scale_cut = cut_short_scale()),
+    expand = expansion(c(0, 0.02)),
+    limits = c(0, NA)
+  ) +
+  scale_x_date(date_labels = "%m/%y", expand = expansion(c(0.1, 0.025))) +
+  scale_color_manual(values = sc("mutedteal3", "mutedpink3", "grey3")) +
+  labs(
+    #title = "magrittr downloads **2020** vs **2021**",
+    x = NULL, y = NULL
+  ) +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_rect("white", "grey80"),
+    legend.position = "none",
+    strip.background = element_rect("white"),
+    strip.text = ggtext::element_textbox(size = 12, hjust = 0, vjust = 1),
+    plot.title.position = "plot",
+    plot.title = ggtext::element_textbox_simple()
+  )
